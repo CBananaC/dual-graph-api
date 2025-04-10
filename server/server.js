@@ -11,10 +11,10 @@ app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 // ✅ 提供前端 HTML、JS、CSS 等檔案
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
 // ✅ 讀取與快取 JSON 資料
