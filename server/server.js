@@ -13,7 +13,6 @@ app.use(express.json());
 // ✅ 提供前端 HTML、JS、CSS 等檔案
 app.use(express.static('public'));
 
-// 預設首頁
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -36,7 +35,6 @@ function loadData() {
     }
 }
 
-// 當 data.json 更新時，自動重載資料
 fs.watchFile(DATA_PATH, (curr, prev) => {
     if (curr.mtime !== prev.mtime) {
         console.log("📌 data.json 變更，重新載入數據...");
@@ -44,13 +42,13 @@ fs.watchFile(DATA_PATH, (curr, prev) => {
     }
 });
 
-// ✅ API 路由
+// ✅ API 路由修正
 app.get('/api/people', (req, res) => {
     res.json(cachedData.people || []);
 });
 
 app.get('/api/accusation-relationships', (req, res) => {
-    const edges = cachedData.accusationRelationships?.edges?.edges;
+    const edges = cachedData.accusationRelationships?.edges;
     if (Array.isArray(edges)) {
         res.json({ edges });
     } else {
@@ -59,7 +57,7 @@ app.get('/api/accusation-relationships', (req, res) => {
 });
 
 app.get('/api/testimony-relationships', (req, res) => {
-    const edges = cachedData.testimonyRelationships?.edges?.edges;
+    const edges = cachedData.testimonyRelationships?.edges;
     if (Array.isArray(edges)) {
         res.json({ edges });
     } else {
