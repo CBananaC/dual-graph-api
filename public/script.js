@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () { 
-  const API_BASE_URL = "http://localhost:3000";
+  const API_BASE_URL = "https://dual-graph-api.onrender.com";
 
   let peopleData = {};              // { id: person }
   let fullAccusationData = {};      // 指控關係原始數據（edges）
