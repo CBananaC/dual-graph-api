@@ -3,17 +3,22 @@ const cors = require('cors');
 const fs = require('fs');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // 為了 Glitch 相容
 const DATA_PATH = './data.json';
 
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
+// ✅ 提供前端 HTML、JS、CSS 等檔案
+app.use(express.static('.'));
+
+// 預設首頁可直接看到
 app.get('/', (req, res) => {
-    res.send('Hello, World!');
+    res.sendFile(__dirname + '/index.html');
 });
 
-let cachedData = loadData(); // 初始化快取數據
+// ✅ 讀取與快取 JSON 資料
+let cachedData = loadData();
 
 function loadData() {
     try {
@@ -37,6 +42,7 @@ fs.watchFile(DATA_PATH, (curr, prev) => {
     }
 });
 
+// ✅ API 路由
 app.get('/api/people', (req, res) => {
     res.json(cachedData.people || []);
 });
@@ -49,6 +55,7 @@ app.get('/api/testimony-relationships', (req, res) => {
     res.json(cachedData.testimonyRelationships || {});
 });
 
+// ✅ 啟動伺服器
 app.listen(PORT, () => {
     console.log(`🚀 伺服器運行於 http://localhost:${PORT}`);
 });
