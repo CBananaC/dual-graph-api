@@ -8,7 +8,9 @@ const PORT = process.env.PORT || 3000; // 為了 Render/Glitch 相容
 const DATA_PATH = path.join(__dirname, 'data.json');
 
 // ✅ 提供前端 HTML、JS、CSS 等靜態檔案
-app.use(cors({ origin: '*' }));
+app.use(cors({
+  origin: ['https://cbananac.github.io', 'http://localhost:3000']
+}));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
