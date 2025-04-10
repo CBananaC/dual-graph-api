@@ -14,7 +14,7 @@ app.use(express.static('.'));
 
 // 預設首頁可直接看到
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/public/index.html');
 });
 
 // ✅ 讀取與快取 JSON 資料
