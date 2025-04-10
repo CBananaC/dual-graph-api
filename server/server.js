@@ -4,22 +4,21 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000; // 為了 Render/Glitch 相容
-const DATA_PATH = path.join(__dirname, 'data.json');
+const PORT = process.env.PORT || 3000;
+const DATA_PATH = './data.json';
 
-// ✅ 提供前端 HTML、JS、CSS 等靜態檔案
-app.use(cors({
-  origin: ['https://cbananac.github.io', 'http://localhost:3000']
-}));
+app.use(cors({ origin: '*' }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// ✅ 預設首頁（處理根目錄請求）
+// ✅ 提供前端 HTML、JS、CSS 等檔案
+app.use(express.static('public'));
+
+// 預設首頁
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// ✅ 快取 data.json 的資料
+// ✅ 讀取與快取 JSON 資料
 let cachedData = loadData();
 
 function loadData() {
@@ -37,7 +36,7 @@ function loadData() {
     }
 }
 
-// ✅ 自動監測 data.json 有變動時重新載入
+// 當 data.json 更新時，自動重載資料
 fs.watchFile(DATA_PATH, (curr, prev) => {
     if (curr.mtime !== prev.mtime) {
         console.log("📌 data.json 變更，重新載入數據...");
@@ -51,11 +50,21 @@ app.get('/api/people', (req, res) => {
 });
 
 app.get('/api/accusation-relationships', (req, res) => {
-    res.json({ edges: cachedData.accusationRelationships || [] });
+    const edges = cachedData.accusationRelationships?.edges?.edges;
+    if (Array.isArray(edges)) {
+        res.json({ edges });
+    } else {
+        res.json({ edges: [] });
+    }
 });
 
 app.get('/api/testimony-relationships', (req, res) => {
-    res.json({ edges: cachedData.testimonyRelationships || [] });
+    const edges = cachedData.testimonyRelationships?.edges?.edges;
+    if (Array.isArray(edges)) {
+        res.json({ edges });
+    } else {
+        res.json({ edges: [] });
+    }
 });
 
 // ✅ 啟動伺服器
