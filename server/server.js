@@ -10,7 +10,7 @@ app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 // ✅ 提供前端 HTML、JS、CSS 等檔案
-app.use(express.static('.'));
+app.use(express.static('public'));
 
 // 預設首頁可直接看到
 app.get('/', (req, res) => {
