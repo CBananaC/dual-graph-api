@@ -11,7 +11,7 @@ body {
   /* 圖表容器 */
   .graph {
     width: 100%;
-    height: 1000px;
+    height: 800px;
     border: 1px solid lightgray;
     position: relative;
   }
@@ -19,7 +19,7 @@ body {
   /* 右側資訊面板 */
   .info-panel {
     width: 28%;
-    height: 1000px;
+    height: 800px;
     padding: 10px;
     border: 1px solid lightgray;
     background-color: #f9f9f9;
@@ -28,7 +28,7 @@ body {
   
   /* 按鈕的基本樣式，適用於身份篩選、中間按鈕、證供篩選等 */
   .filter-button {
-    padding: 10px 10px;
+    padding: 10px 15px;
     margin: 2px;
     font-size: 16px;
     cursor: pointer;
@@ -38,7 +38,7 @@ body {
     transition: background-color 0.3s ease;
   }
   
-  /* 當按鈕被選中時 */
+  /* 當按鈕被選中時，背景變紅 */
   .filter-button.active {
     background-color: red;
     color: white;
@@ -61,11 +61,22 @@ body {
   }
   
   /* Media Query：針對 iPad 或螢幕寬度在 1024px 以下時 */
-  @media (max-width: 1024px) {
+  @media (max-width: 1180px) {
     .graph {
-      height: 600px;
+      height: 680px;
     }
     .info-panel {
-        height: 600px;
-      }
+        height: 680px;
+    }
+
+  }
+  
+  /* Media Query：針對 iPad 橫向（landscape）模式時，將圖表高度設為 500px */
+  @media (orientation: landscape) and (max-width: 1024px) {
+    .graph {
+      height: 900px;
+    }
+    .info-panel {
+        height: 900px;
+    }
   }
