@@ -1,14 +1,16 @@
+/* 字型 */
 body {
     font-family: Arial, sans-serif;
   }
   
+  /* Container for graph and info panel */
   .container {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
   }
   
-  /* 圖表容器 */
+  /* Graph container */
   .graph {
     width: 100%;
     height: 800px;
@@ -16,7 +18,7 @@ body {
     position: relative;
   }
   
-  /* 右側資訊面板 */
+  /* Info panel */
   .info-panel {
     width: 28%;
     height: 800px;
@@ -26,7 +28,7 @@ body {
     overflow-y: auto;
   }
   
-  /* 按鈕的基本樣式，適用於身份篩選、中間按鈕、證供篩選等 */
+  /* 篩選按鈕基本樣式 */
   .filter-button {
     padding: 10px 15px;
     margin: 2px;
@@ -38,45 +40,78 @@ body {
     transition: background-color 0.3s ease;
   }
   
-  /* 當按鈕被選中時，背景變紅 */
+  /* 當鼠標懸停 */
+  .filter-button:hover {
+    background-color: #ddd;
+  }
+  
+  /* 非身份篩選按鈕 active 狀態（預設為紅色） */
   .filter-button.active {
     background-color: red;
     color: white;
   }
   
-  /* 當按鈕被按下時 */
-  .filter-button:active {
-    background-color: #e60000;
-    color: white;
+  /* 身份篩選按鈕 active 狀態：根據身份顏色 */
+  .filter-identity-button[data-identity="功臣"].active {
+    background-color: #73a0fa;
+  }
+  .filter-identity-button[data-identity="藍玉"].active {
+    background-color: #73d8fa;
+  }
+  .filter-identity-button[data-identity="胡惟庸功臣"].active {
+    background-color: #73fa9e;
+  }
+  .filter-identity-button[data-identity="都督"].active {
+    background-color: #8e73fa;
+  }
+  .filter-identity-button[data-identity="親屬"].active {
+    background-color: #cfcfcf;
+  }
+  .filter-identity-button[data-identity="僕役"].active {
+    background-color: #cfcfcf;
   }
   
-  /* 當鼠標懸停在非選中的按鈕上時 */
-  .filter-button:hover {
-    background-color: #ddd;
-  }
-  
-  /* 中間按鈕區 */
+  /* Filter buttons container */
   .filter-buttons {
     text-align: center;
   }
   
-  /* Media Query：針對 iPad 或螢幕寬度在 1024px 以下時 */
+  /* Zoom 按鈕 (獨立) */
+  .zoom-button {
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    padding: 5px 8px;
+    margin: 2px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+  }
+  .zoom-button:hover {
+    background: rgba(240, 240, 240, 0.8);
+  }
+  .zoom-controls {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 10;
+  }
+  
+  /* Media Query：螢幕寬度小於 1180px */
   @media (max-width: 1180px) {
     .graph {
       height: 680px;
     }
     .info-panel {
-        height: 680px;
+      height: 680px;
     }
-
   }
   
-  /* Media Query：針對 iPad 橫向（landscape）模式時，將圖表高度設為 500px */
+  /* Media Query：針對 iPad 橫向模式（max-width: 1024px） */
   @media (orientation: landscape) and (max-width: 1024px) {
     .graph {
       height: 900px;
     }
     .info-panel {
-        height: 900px;
+      height: 900px;
     }
   }
