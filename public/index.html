@@ -9,7 +9,7 @@
   <!-- 加入 Font Awesome 圖標庫 -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
   <style>
-    /* 可根據需要調整按鈕樣式 */
+    /* 保留放大縮小按鈕的樣式 */
     .zoom-button {
       background: rgba(255, 255, 255, 0.8);
       border: none;
@@ -22,11 +22,7 @@
     .zoom-button:hover {
       background: rgba(240, 240, 240, 0.8);
     }
-    /* 讓圖表容器為相對定位，便於定位縮放按鈕 */
-    .graph {
-      position: relative;
-    }
-    /* 縮放控制容器 */
+    /* 放大縮小容器，本範例放在圖表容器內，位置在右下角 */
     .zoom-controls {
       position: absolute;
       bottom: 10px;
@@ -75,7 +71,7 @@
       <i class="fas fa-eye"></i> 重置
     </button>
   </h2>
-  <!-- 新增證供關係圖的 label 篩選欄位 -->
+  <!-- 證供關係圖的 label 篩選欄位 -->
   <div id="testimonyFilter" class="filter-panel">
     <span>篩選證供關係: </span>
     <button class="filter-button filter-testimony-button" data-label="全部">全部證供關係</button>
