@@ -45,13 +45,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // 事件：放大
     zoomInButton.addEventListener("click", () => {
       const currentScale = network.getScale();
-      network.moveTo({ scale: currentScale * 1.2 });
+      network.moveTo({ scale: currentScale * 1.5 });
     });
 
     // 事件：縮小
     zoomOutButton.addEventListener("click", () => {
       const currentScale = network.getScale();
-      network.moveTo({ scale: currentScale / 1.2 });
+      network.moveTo({ scale: currentScale / 1.5 });
     });
   }
   // ====================================================
@@ -370,37 +370,49 @@ document.addEventListener("DOMContentLoaded", function () {
   // ---------------------------
   // 證供圖操作 新功能
   // ---------------------------
-  function filterTestimonyEdgesByLabelForNode(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
-      }
-    } else {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accuser === selectedPersonId && edge.label === chosenLabel
-        );
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accused && edge.accused.includes(selectedPersonId) && edge.label === chosenLabel
-        );
-      }
+  // 修改後：針對選定 node 模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForNode(chosenLabel) {
+  let filteredEdges;
+  // 將關鍵字轉成小寫並去除前後空白
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
     }
-    updateTestimonyGraph(filteredEdges);
+  } else {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accuser === selectedPersonId &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accused && edge.accused.includes(selectedPersonId) &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    }
   }
+  updateTestimonyGraph(filteredEdges);
+}
 
-  function filterTestimonyEdgesByLabelForAll(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      filteredEdges = fullTestimonyData.edges;
-    } else {
-      filteredEdges = fullTestimonyData.edges.filter(edge => edge.label === chosenLabel);
-    }
-    updateTestimonyGraph(filteredEdges);
+// 修改後：針對全局模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForAll(chosenLabel) {
+  let filteredEdges;
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    filteredEdges = fullTestimonyData.edges;
+  } else {
+    filteredEdges = fullTestimonyData.edges.filter(edge =>
+      typeof edge.label === "string" &&
+      edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+    );
   }
+  updateTestimonyGraph(filteredEdges);
+}
 
   function updateTestimonyGraph(edgesArr) {
     const processedEdges = preprocessEdges(edgesArr);
@@ -619,37 +631,49 @@ document.addEventListener("DOMContentLoaded", function () {
   // ---------------------------
   // 證供圖操作：新功能
   // ---------------------------
-  function filterTestimonyEdgesByLabelForNode(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
-      }
-    } else {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accuser === selectedPersonId && edge.label === chosenLabel
-        );
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accused && edge.accused.includes(selectedPersonId) && edge.label === chosenLabel
-        );
-      }
+  // 修改後：針對選定 node 模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForNode(chosenLabel) {
+  let filteredEdges;
+  // 將關鍵字轉成小寫並去除前後空白
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
     }
-    updateTestimonyGraph(filteredEdges);
+  } else {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accuser === selectedPersonId &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accused && edge.accused.includes(selectedPersonId) &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    }
   }
+  updateTestimonyGraph(filteredEdges);
+}
 
-  function filterTestimonyEdgesByLabelForAll(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      filteredEdges = fullTestimonyData.edges;
-    } else {
-      filteredEdges = fullTestimonyData.edges.filter(edge => edge.label === chosenLabel);
-    }
-    updateTestimonyGraph(filteredEdges);
+// 修改後：針對全局模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForAll(chosenLabel) {
+  let filteredEdges;
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    filteredEdges = fullTestimonyData.edges;
+  } else {
+    filteredEdges = fullTestimonyData.edges.filter(edge =>
+      typeof edge.label === "string" &&
+      edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+    );
   }
+  updateTestimonyGraph(filteredEdges);
+}
 
   function updateTestimonyGraph(edgesArr) {
     const processedEdges = preprocessEdges(edgesArr);
@@ -868,37 +892,49 @@ document.addEventListener("DOMContentLoaded", function () {
   // ---------------------------
   // 證供圖操作：新功能
   // ---------------------------
-  function filterTestimonyEdgesByLabelForNode(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
-      }
-    } else {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accuser === selectedPersonId && edge.label === chosenLabel
-        );
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accused && edge.accused.includes(selectedPersonId) && edge.label === chosenLabel
-        );
-      }
+  // 修改後：針對選定 node 模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForNode(chosenLabel) {
+  let filteredEdges;
+  // 將關鍵字轉成小寫並去除前後空白
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
     }
-    updateTestimonyGraph(filteredEdges);
+  } else {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accuser === selectedPersonId &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accused && edge.accused.includes(selectedPersonId) &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    }
   }
+  updateTestimonyGraph(filteredEdges);
+}
 
-  function filterTestimonyEdgesByLabelForAll(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      filteredEdges = fullTestimonyData.edges;
-    } else {
-      filteredEdges = fullTestimonyData.edges.filter(edge => edge.label === chosenLabel);
-    }
-    updateTestimonyGraph(filteredEdges);
+// 修改後：針對全局模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForAll(chosenLabel) {
+  let filteredEdges;
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    filteredEdges = fullTestimonyData.edges;
+  } else {
+    filteredEdges = fullTestimonyData.edges.filter(edge =>
+      typeof edge.label === "string" &&
+      edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+    );
   }
+  updateTestimonyGraph(filteredEdges);
+}
 
   function updateTestimonyGraph(edgesArr) {
     const processedEdges = preprocessEdges(edgesArr);
@@ -1117,287 +1153,49 @@ document.addEventListener("DOMContentLoaded", function () {
   // ---------------------------
   // 證供圖操作：新功能
   // ---------------------------
-  function filterTestimonyEdgesByLabelForNode(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
-      }
-    } else {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accuser === selectedPersonId && edge.label === chosenLabel
-        );
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accused && edge.accused.includes(selectedPersonId) && edge.label === chosenLabel
-        );
-      }
+  // 修改後：針對選定 node 模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForNode(chosenLabel) {
+  let filteredEdges;
+  // 將關鍵字轉成小寫並去除前後空白
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
     }
-    updateTestimonyGraph(filteredEdges);
-  }
-
-  function filterTestimonyEdgesByLabelForAll(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      filteredEdges = fullTestimonyData.edges;
-    } else {
-      filteredEdges = fullTestimonyData.edges.filter(edge => edge.label === chosenLabel);
-    }
-    updateTestimonyGraph(filteredEdges);
-  }
-
-  function updateTestimonyGraph(edgesArr) {
-    const processedEdges = preprocessEdges(edgesArr);
-    const edgesWithIds = processedEdges.map((edge, index) => ({
-      ...edge,
-      id: edge.edgeId || `edge-${index}`,
-      originalData: edge
-    }));
-    let allowedNodeIds = new Set();
-    edgesArr.forEach(edge => {
-      allowedNodeIds.add(edge.from);
-      allowedNodeIds.add(edge.to);
-      if (edge.accused && Array.isArray(edge.accused)) {
-        edge.accused.forEach(id => allowedNodeIds.add(id));
-      }
-    });
-    const filteredNodes = Object.values(peopleData)
-      .filter(person => allowedNodeIds.has(person.id))
-      .map(person => ({
-        ...person,
-        label: person.姓名,
-        color: getColorByIdentity(person.身份)
-      }));
-    const degreeMap = getNodeDegrees(edgesWithIds);
-    const finalNodes = filteredNodes.map(node => ({
-      ...node,
-      value: degreeMap[node.id] || 0
-    }));
-    const nodes = new vis.DataSet(finalNodes);
-    const edges = new vis.DataSet(edgesWithIds);
-    testimonyGraph.network.setData({ nodes, edges });
-  }
-
-  function restoreTestimonyGraph() {
-    const nodesArray = fullTestimonyData.nodes
-      ? fullTestimonyData.nodes.map(node => ({ ...node, color: getColorByIdentity(node.身份) }))
-      : Object.values(peopleData).map(person => ({
-          ...person,
-          label: person.姓名,
-          color: getColorByIdentity(person.身份)
-      }));
-    const relatedIds = new Set(fullTestimonyData.edges.flatMap(edge => [edge.from, edge.to]));
-    const filteredNodes = nodesArray.filter(node => relatedIds.has(node.id));
-    const processedEdges = preprocessEdges(fullTestimonyData.edges);
-    const edgesWithIds = processedEdges.map((edge, index) => ({
-      ...edge,
-      id: edge.edgeId || `edge-${index}`,
-      originalData: edge
-    }));
-    const degreeMap = getNodeDegrees(edgesWithIds);
-    const finalNodes = filteredNodes.map(node => ({
-      ...node,
-      value: degreeMap[node.id] || 0
-    }));
-    const nodes = new vis.DataSet(finalNodes);
-    const edges = new vis.DataSet(edgesWithIds);
-    testimonyGraph.network.setData({ nodes, edges });
-  }
-
-  // ---------------------------
-  // 原有：重置與資訊顯示
-  // ---------------------------
-  function resetButtons() {
-    activeButton = null;
-    const btnIds = ["accusedButton", "accuserButton", "showAllButton"];
-    btnIds.forEach(id => {
-      const btn = document.getElementById(id);
-      btn.classList.remove("active");
-      btn.style.backgroundColor = "";
-    });
-  }
-
-  function showPersonInfo(nodeId, infoPanelId) {
-    const infoPanel = document.getElementById(infoPanelId);
-    const person = peopleData[nodeId];
-    if (person) {
-      infoPanel.innerHTML = `
-        <h3>人物資訊</h3>
-        <p><strong>名字：</strong> ${person.姓名 || ""}</p>
-        <p><strong>年齡：</strong> ${person.年齡 || "-"}</p>
-        <p><strong>種族：</strong> ${person.種族 || "-"}</p>
-        <p><strong>籍貫：</strong> ${person.籍貫 || "-"}</p>
-        <p><strong>親屬關係：</strong> ${person.親屬關係 || "-"}</p>
-        <p><strong>身份：</strong> ${person.身份 || "-"}</p>
-        <p><strong>職位：</strong> ${person.職位 || "-"}</p>
-        <p><strong>下場：</strong> ${person.下場 || "-"}</p>
-        <p><strong>原文：</strong> ${person.原文 || "-"}</p>
-        <p><strong>資料來源：</strong> ${person.資料來源 || "-"}</p>
-      `;
-    } else {
-      infoPanel.innerHTML = "<p>❌ 無法找到該人物的詳細資料。</p>";
+  } else {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accuser === selectedPersonId &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accused && edge.accused.includes(selectedPersonId) &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
     }
   }
+  updateTestimonyGraph(filteredEdges);
+}
 
-  function showAccusationEdgeInfo(edgeId, edgesData, infoPanelId) {
-    const edge = edgesData.find(edge => edge.id === edgeId);
-    const infoPanel = document.getElementById(infoPanelId);
-    if (edge) {
-      infoPanel.innerHTML = `
-        <h3>指控關係資訊</h3>
-        <p><strong>關係類型：</strong> ${edge.label || "-"}</p>
-      `;
-    } else {
-      console.error("❌ 無法找到該指控關係資訊，Edge ID:", edgeId);
-      infoPanel.innerHTML = "<p>❌ 無法找到該指控關係的詳細資訊。</p>";
-    }
+// 修改後：針對全局模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForAll(chosenLabel) {
+  let filteredEdges;
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    filteredEdges = fullTestimonyData.edges;
+  } else {
+    filteredEdges = fullTestimonyData.edges.filter(edge =>
+      typeof edge.label === "string" &&
+      edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+    );
   }
-
-  function showTestimonyEdgeInfo(edgeId, edgesData, infoPanelId) {
-    console.log("DEBUG: showTestimonyEdgeInfo 被呼叫，edgeId =", edgeId);
-    const clickedEdge = edgesData.find(edge => edge.id.toString() === edgeId.toString());
-    const infoPanel = document.getElementById(infoPanelId);
-    if (clickedEdge && clickedEdge.originalData) {
-      const orig = clickedEdge.originalData;
-      const accuserName = orig.accuser && peopleData[orig.accuser] ? peopleData[orig.accuser].姓名 : "-";
-      const accusedNames = orig.accused
-          ? orig.accused.map(id => (peopleData[id] ? peopleData[id].姓名 : "-")).join("、")
-          : "";
-      infoPanel.innerHTML = `
-        <h3>證供關係資訊</h3>
-        <p><strong>關係類型：</strong> ${orig.label || "-"}</p>
-        <p><strong>作供者：</strong> ${accuserName}</p>
-        <p><strong>被供者：</strong> ${accusedNames}</p>
-        <p><strong>發生日期：</strong> ${orig.Date || "-"}</p>
-        <p><strong>說明：</strong> ${orig.Conclusion || "-"}</p>
-        <p><strong>供詞原文：</strong> ${orig.Text || "-"}</p>
-        <p><strong>詳細內容：</strong> ${orig.Reference || "-"}</p>
-      `;
-    } else {
-      console.error("❌ 無法找到該證供關係資訊，Edge ID:", edgeId);
-      infoPanel.innerHTML = "<p>❌ 無法找到該證供關係的詳細資訊。</p>";
-    }
-  }
-
-  // ---------------------------
-  // 證供圖 新功能：當指控圖中選定 node 並按下「作為指控者／被指控者」後，
-  // 點擊「篩選證供關係」按鈕依據所選 label 過濾出相關 edges；
-  // 若未選定 node，則以全局模式過濾
-  document.querySelectorAll(".filter-testimony-button").forEach(btn => {
-    btn.addEventListener("click", function () {
-      document.querySelectorAll(".filter-testimony-button").forEach(b => b.classList.remove("active"));
-      this.classList.add("active");
-      const chosenLabel = this.getAttribute("data-label");
-      if (selectedPersonId && (testimonyRelationMode === "accuser" || testimonyRelationMode === "accused")) {
-        filterTestimonyEdgesByLabelForNode(chosenLabel);
-      } else {
-        filterTestimonyEdgesByLabelForAll(chosenLabel);
-      }
-    });
-  });
-
-  // ---------------------------
-  // 指控圖操作（保持原有功能）
-  // ---------------------------
-  function filterAccusationGraphByIdentity(identity) {
-    const allowedToNodes = Object.values(peopleData)
-      .filter(person => person.身份 === identity)
-      .map(person => ({
-        ...person,
-        label: person.姓名,
-        color: getColorByIdentity(person.身份)
-      }));
-    const allowedToIds = new Set(allowedToNodes.map(node => node.id));
-    const filteredEdges = fullAccusationData.edges.filter(edge => allowedToIds.has(edge.to));
-    const processedEdges = preprocessEdges(filteredEdges);
-    const edgesWithIds = processedEdges.map((edge, index) => ({
-      ...edge,
-      id: edge.edgeId || `edge-${index}`,
-      originalData: edge
-    }));
-    const allowedNodeIds = new Set();
-    filteredEdges.forEach(edge => {
-      allowedNodeIds.add(edge.from);
-      allowedNodeIds.add(edge.to);
-    });
-    const filteredNodes = Object.values(peopleData)
-      .filter(person => allowedNodeIds.has(person.id))
-      .map(person => ({
-        ...person,
-        label: person.姓名,
-        color: getColorByIdentity(person.身份)
-      }));
-    const degreeMap = getNodeDegrees(edgesWithIds);
-    const finalNodes = filteredNodes.map(node => ({
-      ...node,
-      value: degreeMap[node.id] || 0
-    }));
-    const nodes = new vis.DataSet(finalNodes);
-    const edges = new vis.DataSet(edgesWithIds);
-    accusationGraph.network.setData({ nodes, edges });
-  }
-
-  function restoreAccusationGraph() {
-    const nodesArray = Object.values(peopleData).map(person => ({
-      ...person,
-      label: person.姓名,
-      color: getColorByIdentity(person.身份)
-    }));
-    const relatedIds = new Set(fullAccusationData.edges.flatMap(edge => [edge.from, edge.to, ...(edge.accused || [])]));
-    const filteredNodes = nodesArray.filter(node => relatedIds.has(node.id));
-    const processedEdges = preprocessEdges(fullAccusationData.edges);
-    const edgesWithIds = processedEdges.map((edge, index) => ({
-      ...edge,
-      id: edge.edgeId || `edge-${index}`,
-      originalData: edge
-    }));
-    const degreeMap = getNodeDegrees(edgesWithIds);
-    const finalNodes = filteredNodes.map(node => ({
-      ...node,
-      value: degreeMap[node.id] || 0
-    }));
-    const nodes = new vis.DataSet(finalNodes);
-    const edges = new vis.DataSet(edgesWithIds);
-    accusationGraph.network.setData({ nodes, edges });
-  }
-
-  // ---------------------------
-  // 證供圖操作：新功能
-  // ---------------------------
-  function filterTestimonyEdgesByLabelForNode(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
-      }
-    } else {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accuser === selectedPersonId && edge.label === chosenLabel
-        );
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accused && edge.accused.includes(selectedPersonId) && edge.label === chosenLabel
-        );
-      }
-    }
-    updateTestimonyGraph(filteredEdges);
-  }
-
-  function filterTestimonyEdgesByLabelForAll(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      filteredEdges = fullTestimonyData.edges;
-    } else {
-      filteredEdges = fullTestimonyData.edges.filter(edge => edge.label === chosenLabel);
-    }
-    updateTestimonyGraph(filteredEdges);
-  }
+  updateTestimonyGraph(filteredEdges);
+}
 
   function updateTestimonyGraph(edgesArr) {
     const processedEdges = preprocessEdges(edgesArr);
@@ -1617,37 +1415,311 @@ document.addEventListener("DOMContentLoaded", function () {
   // ---------------------------
   // 證供圖操作：新功能
   // ---------------------------
-  function filterTestimonyEdgesByLabelForNode(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
-      }
-    } else {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accuser === selectedPersonId && edge.label === chosenLabel
-        );
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accused && edge.accused.includes(selectedPersonId) && edge.label === chosenLabel
-        );
-      }
+  // 修改後：針對選定 node 模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForNode(chosenLabel) {
+  let filteredEdges;
+  // 將關鍵字轉成小寫並去除前後空白
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
     }
-    updateTestimonyGraph(filteredEdges);
+  } else {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accuser === selectedPersonId &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accused && edge.accused.includes(selectedPersonId) &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    }
+  }
+  updateTestimonyGraph(filteredEdges);
+}
+
+// 修改後：針對全局模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForAll(chosenLabel) {
+  let filteredEdges;
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    filteredEdges = fullTestimonyData.edges;
+  } else {
+    filteredEdges = fullTestimonyData.edges.filter(edge =>
+      typeof edge.label === "string" &&
+      edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+    );
+  }
+  updateTestimonyGraph(filteredEdges);
+}
+
+  function updateTestimonyGraph(edgesArr) {
+    const processedEdges = preprocessEdges(edgesArr);
+    const edgesWithIds = processedEdges.map((edge, index) => ({
+      ...edge,
+      id: edge.edgeId || `edge-${index}`,
+      originalData: edge
+    }));
+    let allowedNodeIds = new Set();
+    edgesArr.forEach(edge => {
+      allowedNodeIds.add(edge.from);
+      allowedNodeIds.add(edge.to);
+      if (edge.accused && Array.isArray(edge.accused)) {
+        edge.accused.forEach(id => allowedNodeIds.add(id));
+      }
+    });
+    const filteredNodes = Object.values(peopleData)
+      .filter(person => allowedNodeIds.has(person.id))
+      .map(person => ({
+        ...person,
+        label: person.姓名,
+        color: getColorByIdentity(person.身份)
+      }));
+    const degreeMap = getNodeDegrees(edgesWithIds);
+    const finalNodes = filteredNodes.map(node => ({
+      ...node,
+      value: degreeMap[node.id] || 0
+    }));
+    const nodes = new vis.DataSet(finalNodes);
+    const edges = new vis.DataSet(edgesWithIds);
+    testimonyGraph.network.setData({ nodes, edges });
   }
 
-  function filterTestimonyEdgesByLabelForAll(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      filteredEdges = fullTestimonyData.edges;
-    } else {
-      filteredEdges = fullTestimonyData.edges.filter(edge => edge.label === chosenLabel);
-    }
-    updateTestimonyGraph(filteredEdges);
+  function restoreTestimonyGraph() {
+    const nodesArray = fullTestimonyData.nodes
+      ? fullTestimonyData.nodes.map(node => ({ ...node, color: getColorByIdentity(node.身份) }))
+      : Object.values(peopleData).map(person => ({
+          ...person,
+          label: person.姓名,
+          color: getColorByIdentity(person.身份)
+      }));
+    const relatedIds = new Set(fullTestimonyData.edges.flatMap(edge => [edge.from, edge.to]));
+    const filteredNodes = nodesArray.filter(node => relatedIds.has(node.id));
+    const processedEdges = preprocessEdges(fullTestimonyData.edges);
+    const edgesWithIds = processedEdges.map((edge, index) => ({
+      ...edge,
+      id: edge.edgeId || `edge-${index}`,
+      originalData: edge
+    }));
+    const degreeMap = getNodeDegrees(edgesWithIds);
+    const finalNodes = filteredNodes.map(node => ({
+      ...node,
+      value: degreeMap[node.id] || 0
+    }));
+    const nodes = new vis.DataSet(finalNodes);
+    const edges = new vis.DataSet(edgesWithIds);
+    testimonyGraph.network.setData({ nodes, edges });
   }
+
+  // ---------------------------
+  // 原有：重置與資訊顯示
+  // ---------------------------
+  function resetButtons() {
+    activeButton = null;
+    const btnIds = ["accusedButton", "accuserButton", "showAllButton"];
+    btnIds.forEach(id => {
+      const btn = document.getElementById(id);
+      btn.classList.remove("active");
+      btn.style.backgroundColor = "";
+    });
+  }
+
+  function showPersonInfo(nodeId, infoPanelId) {
+    const infoPanel = document.getElementById(infoPanelId);
+    const person = peopleData[nodeId];
+    if (person) {
+      infoPanel.innerHTML = `
+        <h3>人物資訊</h3>
+        <p><strong>名字：</strong> ${person.姓名 || ""}</p>
+        <p><strong>年齡：</strong> ${person.年齡 || "-"}</p>
+        <p><strong>種族：</strong> ${person.種族 || "-"}</p>
+        <p><strong>籍貫：</strong> ${person.籍貫 || "-"}</p>
+        <p><strong>親屬關係：</strong> ${person.親屬關係 || "-"}</p>
+        <p><strong>身份：</strong> ${person.身份 || "-"}</p>
+        <p><strong>職位：</strong> ${person.職位 || "-"}</p>
+        <p><strong>下場：</strong> ${person.下場 || "-"}</p>
+        <p><strong>原文：</strong> ${person.原文 || "-"}</p>
+        <p><strong>資料來源：</strong> ${person.資料來源 || "-"}</p>
+      `;
+    } else {
+      infoPanel.innerHTML = "<p>❌ 無法找到該人物的詳細資料。</p>";
+    }
+  }
+
+  function showAccusationEdgeInfo(edgeId, edgesData, infoPanelId) {
+    const edge = edgesData.find(edge => edge.id === edgeId);
+    const infoPanel = document.getElementById(infoPanelId);
+    if (edge) {
+      infoPanel.innerHTML = `
+        <h3>指控關係資訊</h3>
+        <p><strong>關係類型：</strong> ${edge.label || "-"}</p>
+      `;
+    } else {
+      console.error("❌ 無法找到該指控關係資訊，Edge ID:", edgeId);
+      infoPanel.innerHTML = "<p>❌ 無法找到該指控關係的詳細資訊。</p>";
+    }
+  }
+
+  function showTestimonyEdgeInfo(edgeId, edgesData, infoPanelId) {
+    console.log("DEBUG: showTestimonyEdgeInfo 被呼叫，edgeId =", edgeId);
+    const clickedEdge = edgesData.find(edge => edge.id.toString() === edgeId.toString());
+    const infoPanel = document.getElementById(infoPanelId);
+    if (clickedEdge && clickedEdge.originalData) {
+      const orig = clickedEdge.originalData;
+      const accuserName = orig.accuser && peopleData[orig.accuser] ? peopleData[orig.accuser].姓名 : "-";
+      const accusedNames = orig.accused
+          ? orig.accused.map(id => (peopleData[id] ? peopleData[id].姓名 : "-")).join("、")
+          : "";
+      infoPanel.innerHTML = `
+        <h3>證供關係資訊</h3>
+        <p><strong>關係類型：</strong> ${orig.label || "-"}</p>
+        <p><strong>作供者：</strong> ${accuserName}</p>
+        <p><strong>被供者：</strong> ${accusedNames}</p>
+        <p><strong>發生日期：</strong> ${orig.Date || "-"}</p>
+        <p><strong>說明：</strong> ${orig.Conclusion || "-"}</p>
+        <p><strong>供詞原文：</strong> ${orig.Text || "-"}</p>
+        <p><strong>詳細內容：</strong> ${orig.Reference || "-"}</p>
+      `;
+    } else {
+      console.error("❌ 無法找到該證供關係資訊，Edge ID:", edgeId);
+      infoPanel.innerHTML = "<p>❌ 無法找到該證供關係的詳細資訊。</p>";
+    }
+  }
+
+  // ---------------------------
+  // 證供圖 新功能：當指控圖中選定 node 並按下「作為指控者／被指控者」後，
+  // 點擊「篩選證供關係」按鈕依據所選 label 過濾出相關 edges；
+  // 若未選定 node，則以全局模式過濾
+  document.querySelectorAll(".filter-testimony-button").forEach(btn => {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll(".filter-testimony-button").forEach(b => b.classList.remove("active"));
+      this.classList.add("active");
+      const chosenLabel = this.getAttribute("data-label");
+      if (selectedPersonId && (testimonyRelationMode === "accuser" || testimonyRelationMode === "accused")) {
+        filterTestimonyEdgesByLabelForNode(chosenLabel);
+      } else {
+        filterTestimonyEdgesByLabelForAll(chosenLabel);
+      }
+    });
+  });
+
+  // ---------------------------
+  // 指控圖操作（保持原有功能）
+  // ---------------------------
+  function filterAccusationGraphByIdentity(identity) {
+    const allowedToNodes = Object.values(peopleData)
+      .filter(person => person.身份 === identity)
+      .map(person => ({
+        ...person,
+        label: person.姓名,
+        color: getColorByIdentity(person.身份)
+      }));
+    const allowedToIds = new Set(allowedToNodes.map(node => node.id));
+    const filteredEdges = fullAccusationData.edges.filter(edge => allowedToIds.has(edge.to));
+    const processedEdges = preprocessEdges(filteredEdges);
+    const edgesWithIds = processedEdges.map((edge, index) => ({
+      ...edge,
+      id: edge.edgeId || `edge-${index}`,
+      originalData: edge
+    }));
+    const allowedNodeIds = new Set();
+    filteredEdges.forEach(edge => {
+      allowedNodeIds.add(edge.from);
+      allowedNodeIds.add(edge.to);
+    });
+    const filteredNodes = Object.values(peopleData)
+      .filter(person => allowedNodeIds.has(person.id))
+      .map(person => ({
+        ...person,
+        label: person.姓名,
+        color: getColorByIdentity(person.身份)
+      }));
+    const degreeMap = getNodeDegrees(edgesWithIds);
+    const finalNodes = filteredNodes.map(node => ({
+      ...node,
+      value: degreeMap[node.id] || 0
+    }));
+    const nodes = new vis.DataSet(finalNodes);
+    const edges = new vis.DataSet(edgesWithIds);
+    accusationGraph.network.setData({ nodes, edges });
+  }
+
+  function restoreAccusationGraph() {
+    const nodesArray = Object.values(peopleData).map(person => ({
+      ...person,
+      label: person.姓名,
+      color: getColorByIdentity(person.身份)
+    }));
+    const relatedIds = new Set(fullAccusationData.edges.flatMap(edge => [edge.from, edge.to, ...(edge.accused || [])]));
+    const filteredNodes = nodesArray.filter(node => relatedIds.has(node.id));
+    const processedEdges = preprocessEdges(fullAccusationData.edges);
+    const edgesWithIds = processedEdges.map((edge, index) => ({
+      ...edge,
+      id: edge.edgeId || `edge-${index}`,
+      originalData: edge
+    }));
+    const degreeMap = getNodeDegrees(edgesWithIds);
+    const finalNodes = filteredNodes.map(node => ({
+      ...node,
+      value: degreeMap[node.id] || 0
+    }));
+    const nodes = new vis.DataSet(finalNodes);
+    const edges = new vis.DataSet(edgesWithIds);
+    accusationGraph.network.setData({ nodes, edges });
+  }
+
+  // ---------------------------
+  // 證供圖操作：新功能
+  // ---------------------------
+  // 修改後：針對選定 node 模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForNode(chosenLabel) {
+  let filteredEdges;
+  // 將關鍵字轉成小寫並去除前後空白
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
+    }
+  } else {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accuser === selectedPersonId &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accused && edge.accused.includes(selectedPersonId) &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    }
+  }
+  updateTestimonyGraph(filteredEdges);
+}
+
+// 修改後：針對全局模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForAll(chosenLabel) {
+  let filteredEdges;
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    filteredEdges = fullTestimonyData.edges;
+  } else {
+    filteredEdges = fullTestimonyData.edges.filter(edge =>
+      typeof edge.label === "string" &&
+      edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+    );
+  }
+  updateTestimonyGraph(filteredEdges);
+}
 
   function updateTestimonyGraph(edgesArr) {
     const processedEdges = preprocessEdges(edgesArr);
@@ -1866,37 +1938,49 @@ document.addEventListener("DOMContentLoaded", function () {
   // ---------------------------
   // 證供圖操作：新功能
   // ---------------------------
-  function filterTestimonyEdgesByLabelForNode(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
-      }
-    } else {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accuser === selectedPersonId && edge.label === chosenLabel
-        );
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accused && edge.accused.includes(selectedPersonId) && edge.label === chosenLabel
-        );
-      }
+  // 修改後：針對選定 node 模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForNode(chosenLabel) {
+  let filteredEdges;
+  // 將關鍵字轉成小寫並去除前後空白
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
     }
-    updateTestimonyGraph(filteredEdges);
+  } else {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accuser === selectedPersonId &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accused && edge.accused.includes(selectedPersonId) &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    }
   }
+  updateTestimonyGraph(filteredEdges);
+}
 
-  function filterTestimonyEdgesByLabelForAll(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      filteredEdges = fullTestimonyData.edges;
-    } else {
-      filteredEdges = fullTestimonyData.edges.filter(edge => edge.label === chosenLabel);
-    }
-    updateTestimonyGraph(filteredEdges);
+// 修改後：針對全局模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForAll(chosenLabel) {
+  let filteredEdges;
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    filteredEdges = fullTestimonyData.edges;
+  } else {
+    filteredEdges = fullTestimonyData.edges.filter(edge =>
+      typeof edge.label === "string" &&
+      edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+    );
   }
+  updateTestimonyGraph(filteredEdges);
+}
 
   function updateTestimonyGraph(edgesArr) {
     const processedEdges = preprocessEdges(edgesArr);
@@ -2116,37 +2200,49 @@ document.addEventListener("DOMContentLoaded", function () {
   // ---------------------------
   // 證供圖操作：新功能
   // ---------------------------
-  function filterTestimonyEdgesByLabelForNode(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
-      }
-    } else {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accuser === selectedPersonId && edge.label === chosenLabel
-        );
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accused && edge.accused.includes(selectedPersonId) && edge.label === chosenLabel
-        );
-      }
+  // 修改後：針對選定 node 模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForNode(chosenLabel) {
+  let filteredEdges;
+  // 將關鍵字轉成小寫並去除前後空白
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
     }
-    updateTestimonyGraph(filteredEdges);
+  } else {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accuser === selectedPersonId &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accused && edge.accused.includes(selectedPersonId) &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    }
   }
+  updateTestimonyGraph(filteredEdges);
+}
 
-  function filterTestimonyEdgesByLabelForAll(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      filteredEdges = fullTestimonyData.edges;
-    } else {
-      filteredEdges = fullTestimonyData.edges.filter(edge => edge.label === chosenLabel);
-    }
-    updateTestimonyGraph(filteredEdges);
+// 修改後：針對全局模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForAll(chosenLabel) {
+  let filteredEdges;
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    filteredEdges = fullTestimonyData.edges;
+  } else {
+    filteredEdges = fullTestimonyData.edges.filter(edge =>
+      typeof edge.label === "string" &&
+      edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+    );
   }
+  updateTestimonyGraph(filteredEdges);
+}
 
   function updateTestimonyGraph(edgesArr) {
     const processedEdges = preprocessEdges(edgesArr);
@@ -2365,37 +2461,49 @@ document.addEventListener("DOMContentLoaded", function () {
   // ---------------------------
   // 證供圖操作：新功能
   // ---------------------------
-  function filterTestimonyEdgesByLabelForNode(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
-      }
-    } else {
-      if (testimonyRelationMode === "accuser") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accuser === selectedPersonId && edge.label === chosenLabel
-        );
-      } else if (testimonyRelationMode === "accused") {
-        filteredEdges = fullTestimonyData.edges.filter(edge =>
-          edge.accused && edge.accused.includes(selectedPersonId) && edge.label === chosenLabel
-        );
-      }
+  // 修改後：針對選定 node 模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForNode(chosenLabel) {
+  let filteredEdges;
+  // 將關鍵字轉成小寫並去除前後空白
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accuser === selectedPersonId);
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge => edge.accused && edge.accused.includes(selectedPersonId));
     }
-    updateTestimonyGraph(filteredEdges);
+  } else {
+    if (testimonyRelationMode === "accuser") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accuser === selectedPersonId &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    } else if (testimonyRelationMode === "accused") {
+      filteredEdges = fullTestimonyData.edges.filter(edge =>
+        edge.accused && edge.accused.includes(selectedPersonId) &&
+        typeof edge.label === "string" &&
+        edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+      );
+    }
   }
+  updateTestimonyGraph(filteredEdges);
+}
 
-  function filterTestimonyEdgesByLabelForAll(chosenLabel) {
-    let filteredEdges;
-    if (chosenLabel === "全部") {
-      filteredEdges = fullTestimonyData.edges;
-    } else {
-      filteredEdges = fullTestimonyData.edges.filter(edge => edge.label === chosenLabel);
-    }
-    updateTestimonyGraph(filteredEdges);
+// 修改後：針對全局模式的篩選函式，使用子字串匹配（忽略大小寫和空白）
+function filterTestimonyEdgesByLabelForAll(chosenLabel) {
+  let filteredEdges;
+  const keyword = chosenLabel.trim().toLowerCase();
+  if (chosenLabel === "全部") {
+    filteredEdges = fullTestimonyData.edges;
+  } else {
+    filteredEdges = fullTestimonyData.edges.filter(edge =>
+      typeof edge.label === "string" &&
+      edge.label.trim().toLowerCase().indexOf(keyword) !== -1
+    );
   }
+  updateTestimonyGraph(filteredEdges);
+}
 
   function updateTestimonyGraph(edgesArr) {
     const processedEdges = preprocessEdges(edgesArr);
