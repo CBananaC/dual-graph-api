@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // =======================================
     // 全域變數與 API 設定
     // =======================================
-    const API_BASE_URL = "http://localhost:3000"; // 請根據實際環境調整
+    const API_BASE_URL = "https://dual-graph-api.onrender.com"; // 請根據實際環境調整
     let peopleData = {};
     let fullAccusationData = {}; // 雖然 Timeline 不使用指控資料，但保留以供身份篩選使用（可根據需求移除）
     let fullTestimonyData = {};
