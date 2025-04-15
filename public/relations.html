@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>關係圖 - 我的論文</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- 載入 vis-network 與 Font Awesome -->
+  <script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.2/dist/vis-network.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- 頂部分頁導航欄 -->
+  <div class="tab-bar">
+    <a href="introduction.html" class="tab-button">引言</a>
+    <a href="relations.html" class="tab-button active">關係圖</a>
+    <a href="timeline.html" class="tab-button">時間線</a>
+    <a href="text.html" class="tab-button">現文</a>
+    <a href="conclusion.html" class="tab-button">結論</a>
+  </div>
+
+  <div class="content">
+    <h1>關係圖</h1>
+    <!-- 指控關係圖身份篩選 -->
+    <div id="accusationFilter" class="filter-panel">
+      <span>篩選身份: </span>
+      <button class="filter-button filter-identity-button" data-identity="全部">全部</button>
+      <button class="filter-button filter-identity-button" data-identity="藍玉">藍玉</button>
+      <button class="filter-button filter-identity-button" data-identity="功臣">參與藍玉謀反的功臣</button>
+      <button class="filter-button filter-identity-button" data-identity="胡惟庸功臣">參與胡惟庸謀反的功臣</button>
+      <button class="filter-button filter-identity-button" data-identity="都督">都督</button>
+      <button class="filter-button filter-identity-button" data-identity="親屬">功臣、都督親屬</button>
+      <button class="filter-button filter-identity-button" data-identity="僕役">功臣、都督僕役</button>
+    </div>
+
+    <!-- 指控關係圖區塊 -->
+    <div class="container">
+      <div id="accusationGraph" class="graph">
+        <!-- 指控圖放大縮小控制 -->
+        <div id="accusationZoomControls" class="zoom-controls">
+          <button id="accZoomIn" class="zoom-button"><i class="fas fa-search-plus"></i></button>
+          <button id="accZoomOut" class="zoom-button"><i class="fas fa-search-minus"></i></button>
+        </div>
+      </div>
+      <div id="infoPanel" class="info-panel">請點擊人物或關係查看詳細資訊</div>
+    </div>
+
+    <!-- 中間按鈕區：指控圖模式設定 -->
+    <div class="filter-buttons">
+      <button id="accuserButton" class="filter-button">
+        <i class="fas fa-user-tie"></i> 作為指控者
+      </button>
+      <button id="accusedButton" class="filter-button">
+        <i class="fas fa-user-injured"></i> 作為被指控者
+      </button>
+    </div>
+
+    <!-- 證供關係圖與篩選 -->
+    <h2>
+      證供關係圖
+      <button id="showAllButton" class="filter-button">
+        <i class="fas fa-eye"></i> 重置
+      </button>
+    </h2>
+
+    <div id="testimonyFilter" class="filter-panel">
+      <span>篩選證供關係: </span>
+      <button class="filter-button filter-testimony-button" data-label="全部">全部證供關係</button>
+      <button class="filter-button filter-testimony-button" data-label="透露謀反動機">透露謀反動機</button>
+      <button class="filter-button filter-testimony-button" data-label="透露謀反計劃">透露謀反計劃</button>
+      <button class="filter-button filter-testimony-button" data-label="邀約謀反">邀約謀反</button>
+      <button class="filter-button filter-testimony-button" data-label="答應參與謀反">答應參與謀反</button>
+      <button class="filter-button filter-testimony-button" data-label="聯絡">聯絡</button>
+      <button class="filter-button filter-testimony-button" data-label="秘密商議">秘密商議</button>
+      <button class="filter-button filter-testimony-button" data-label="要求隱暪謀反">要求隱暪謀反</button>
+      <button class="filter-button filter-testimony-button" data-label="聚兵預備謀反">聚兵預備謀反</button>
+      <button class="filter-button filter-testimony-button" data-label="屯積兵馬">屯積兵馬</button>
+      <button class="filter-button filter-testimony-button" data-label="借兵馬">借兵馬</button>
+      <button class="filter-button filter-testimony-button" data-label="取兵馬">取兵馬</button>
+      <button class="filter-button filter-testimony-button" data-label="參與胡惟庸謀反">參與胡惟庸謀反</button>
+      <button class="filter-button filter-testimony-button" data-label="藍玉事敗後計劃謀反">藍玉事敗後計劃謀反</button>
+    </div>
+
+    <div class="container">
+      <div id="testimonyGraph" class="graph">
+        <!-- 證供圖放大縮小控制 -->
+        <div id="testimonyZoomControls" class="zoom-controls">
+          <button id="testZoomIn" class="zoom-button"><i class="fas fa-search-plus"></i></button>
+          <button id="testZoomOut" class="zoom-button"><i class="fas fa-search-minus"></i></button>
+        </div>
+      </div>
+      <div id="infoPanelTestimony" class="info-panel">請點擊人物或關係查看詳細資訊</div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

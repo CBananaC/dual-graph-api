@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timeline - 論文與雙重關係圖</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- 引入 vis-network 與 Font Awesome -->
+  <script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.2/dist/vis-network.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- 頂部分頁導航欄 -->
+  <div class="tab-bar">
+    <a href="introduction.html" class="tab-button">引言</a>
+    <a href="relations.html" class="tab-button">關係圖</a>
+    <a href="timeline.html" class="tab-button active" data-target="timeline">時間線</a>
+    <a href="text.html" class="tab-button">現文</a>
+    <a href="conclusion.html" class="tab-button">結論</a>
+  </div>
+
+  <div class="content">
+    <h1>時間線</h1>
+
+    <!-- Timeline 篩選區 -->
+    <div id="timelineFilter" class="filter-panel">
+      <span>篩選時間: </span>
+      <div class="button-group">
+        <!-- "全部" 按鈕 -->
+        <button class="filter-button timeline-filter-button" data-engdate="全部">全部</button>
+      </div>
+      
+      <!-- 依年份分組 -->
+      <div class="timeline-group">
+        <h4>洪武八年~洪武二十三年</h4>
+        <div class="button-group">
+          <button class="filter-button timeline-filter-button" data-engdate="洪武八年">洪武八年</button>
+          <button class="filter-button timeline-filter-button" data-engdate="洪武十一年">洪武十一年</button>
+          <button class="filter-button timeline-filter-button" data-engdate="洪武十二年">洪武十二年</button>
+          <button class="filter-button timeline-filter-button" data-engdate="洪武十三年">洪武十三年</button>
+          <button class="filter-button timeline-filter-button" data-engdate="洪武二十一年">洪武二十一年</button>
+          <button class="filter-button timeline-filter-button" data-engdate="洪武二十三年">洪武二十三年</button>
+        </div>
+      </div>
+
+
+      <div class="timeline-group">
+        <h4>洪武二十四年</h4>
+        <div class="button-group">
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十四年">全年</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十四年二月二十五日">二月</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十四年三月">三月</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十四年四月">四月</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十四年九月">九月</button>
+        </div>
+      </div>
+      
+      <div class="timeline-group">
+        <h4>洪武二十五年</h4>
+        <div class="button-group">
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年">全年</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年正月">正月</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年二月">二月</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年五月">五月</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年七月">七月</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年九月">九月</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年十月">十月</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年十一月">十一月</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年十二月">十二月</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年閏十二月">閏十二月</button>
+        </div>
+      </div>
+
+        <div class="timeline-group">
+
+        <h4>洪武二十六年</h4>
+        <div class="button-group">
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年">全年</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年失記的日">失記的日</button>
+        </div>
+
+        <h4>正月</h4>
+        <div class="button-group">
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月">全月</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月失記的日">失記的日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月初三日">初三日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月初七日">初七日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月十二日">十二日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月十三日">十三日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月十五日">十五日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月十六日">十六日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月十七日">十七日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月十八日">十八日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月二十日">二十日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月二十一日">二十一日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月二十二日">二十二日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月二十四日">二十四日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月二十七日">二十七日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月二十八日">二十八日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年正月二十九日">二十九日</button>
+        </div>
+
+        <h4>二月</h4>
+        <div class="button-group">
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年二月">全月</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年二月失記的日">失記的日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年二月初一日">初一日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年二月初二日">初二日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年二月初三日">初三日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年二月初五日">初五日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年二月初六日">初六日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年二月初七日">初七日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年二月初八日">初八日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年二月十八日">十八日</button>
+        </div>
+
+        <h4>三月</h4>
+        <div class="button-group">
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年三月">全月</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年三月初二日">初二日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年三月十四日">十四日</button>
+        </div>
+
+        <h4>四月</h4>
+        <div class="button-group">
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年四月">全月</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年四月失記的日">失記的日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年四月初二日">初二日</button>
+            <button class="filter-button timeline-filter-button" data-engdate="洪武二十六年四月初七日">初七日</button>
+        </div>
+        </div>
+      <!-- 其它年份分組可以依需求增加 -->
+    </div>
+
+    <!-- Timeline 圖表與資訊面板區塊 -->
+    <div class="container">
+      <div id="timelineGraph" class="graph">
+        <!-- 放大縮小控制按鈕 -->
+        <div id="timelineZoomControls" class="zoom-controls">
+          <button id="timelineZoomIn" class="zoom-button"><i class="fas fa-search-plus"></i></button>
+          <button id="timelineZoomOut" class="zoom-button"><i class="fas fa-search-minus"></i></button>
+        </div>
+      </div>
+      <div id="infoPanelTimeline" class="info-panel">請點擊人物或關係查看詳細資訊</div>
+    </div>
+  </div>
+  
+  <script src="timeline.js"></script>
+</body>
+</html>
