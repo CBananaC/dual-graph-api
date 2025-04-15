@@ -1,5 +1,25 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const API_BASE_URL = "https://dual-graph-api.onrender.com";
+
+    // =======================================
+  // 頂部分頁導覽功能 (Tab Navigation)
+  // =======================================
+  const tabButtons = document.querySelectorAll(".tab-button");
+  const sections = document.querySelectorAll(".page-section");
+
+  tabButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      // 移除所有按鈕及頁面區塊的 active 樣式
+      tabButtons.forEach(btn => btn.classList.remove("active"));
+      sections.forEach(section => section.classList.remove("active"));
+
+      // 根據所點選的按鈕顯示相應分頁（透過 data-target 屬性）
+      button.classList.add("active");
+      const targetId = button.getAttribute("data-target");
+      document.getElementById(targetId).classList.add("active");
+    });
+  });
+
+  const API_BASE_URL = "http://localhost:3000";
 
   let peopleData = {};              // { id: person }
   let fullAccusationData = {};      // 指控關係原始數據（edges）
@@ -69,15 +89,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const mapping = {
       "功臣": "#73a0fa",
       "藍玉": "#73d8fa",
-      "功臣僕役": "#cfcfcf",
-      "功臣親屬": "#cfcfcf",
+      "僕役": "#cfcfcf",
+      "親屬": "#cfcfcf",
       "文官": "#cfcfcf",
       "武官": "#fa73c4",
       "皇帝": "#faf573",
       "胡惟庸功臣": "#73fa9e",
       "都督": "#8e73fa",
-      "都督僕役": "#cfcfcf",
-      "都督親屬": "#cfcfcf"
     };
     return mapping[identity] || "#999999";
   }
@@ -304,6 +322,43 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
     return { nodes, edges, network };
+  }
+
+  function filterTimelineEdges(engdate) {
+    const filteredEdges = fullTestimonyData.edges.filter(edge => edge.Engdate === engdate);
+    updateTimelineGraph(filteredEdges);
+  }
+  // 更新 Timeline 圖表（與證供圖相似）
+  function updateTimelineGraph(edgesArr) {
+    const processedEdges = preprocessEdges(edgesArr);
+    const edgesWithIds = processedEdges.map((edge, index) => ({
+      ...edge,
+      id: edge.edgeId || `edge-${index}`,
+      originalData: edge
+    }));
+    let allowedNodeIds = new Set();
+    edgesWithIds.forEach(edge => {
+      allowedNodeIds.add(edge.from);
+      allowedNodeIds.add(edge.to);
+      if (edge.accused && Array.isArray(edge.accused)) {
+        edge.accused.forEach(id => allowedNodeIds.add(id));
+      }
+    });
+    const filteredNodes = Object.values(peopleData)
+      .filter(person => allowedNodeIds.has(person.id))
+      .map(person => ({
+        ...person,
+        label: person.姓名,
+        color: getColorByIdentity(person.身份)
+      }));
+    const degreeMap = getNodeDegrees(edgesWithIds);
+    const finalNodes = filteredNodes.map(node => ({
+      ...node,
+      value: degreeMap[node.id] || 0
+    }));
+    const nodes = new vis.DataSet(finalNodes);
+    const edges = new vis.DataSet(edgesWithIds);
+    timelineGraph.network.setData({ nodes, edges });
   }
 
   // ---------------------------
@@ -1392,7 +1447,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         filterTestimonyEdgesByLabelForAll(chosenLabel);
       }
-    });
+    }); 
   });
 
   // ---------------------------
@@ -1519,4 +1574,16 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+    // 新增：Timeline 頁面上的時間線按鈕事件
+    const timelineButtons = document.querySelectorAll(".timeline-filter-button");
+    timelineButtons.forEach(button => {
+      button.addEventListener("click", function () {
+        // 清除其它 timeline 按鈕 active 樣式（如有多個）
+        timelineButtons.forEach(btn => btn.classList.remove("active"));
+        this.classList.add("active");
+        // 根據 data-engdate 屬性進行過濾
+        const engdate = this.getAttribute("data-engdate");
+        filterTimelineEdges(engdate);
+      });
+    });
 });
