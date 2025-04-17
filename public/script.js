@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  const API_BASE_URL = "https://dual-graph-api.onrender.com";
+  const API_BASE_URL = "http://localhost:3000";
 
   let peopleData = {};              // { id: person }
   let fullAccusationData = {};      // 指控關係原始數據（edges）
@@ -365,26 +365,33 @@ document.addEventListener("DOMContentLoaded", function () {
   // 指控圖操作（保持原有功能）
   // ---------------------------
   function filterAccusationGraphByIdentity(identity) {
+    // 這裡改為檢查 person.身份 是否包含所選的身份關鍵字
     const allowedToNodes = Object.values(peopleData)
-      .filter(person => person.身份 === identity)
+      .filter(person => person.身份 && person.身份.indexOf(identity) !== -1)
       .map(person => ({
         ...person,
         label: person.姓名,
         color: getColorByIdentity(person.身份)
       }));
+  
     const allowedToIds = new Set(allowedToNodes.map(node => node.id));
+  
+    // 過濾指控關係邊：若邊的接收者（edge.to）屬於 allowedToIds，即表示其身份符合篩選條件
     const filteredEdges = fullAccusationData.edges.filter(edge => allowedToIds.has(edge.to));
+  
     const processedEdges = preprocessEdges(filteredEdges);
     const edgesWithIds = processedEdges.map((edge, index) => ({
       ...edge,
       id: edge.edgeId || `edge-${index}`,
       originalData: edge
     }));
+  
     const allowedNodeIds = new Set();
     filteredEdges.forEach(edge => {
       allowedNodeIds.add(edge.from);
       allowedNodeIds.add(edge.to);
     });
+  
     const filteredNodes = Object.values(peopleData)
       .filter(person => allowedNodeIds.has(person.id))
       .map(person => ({
@@ -392,13 +399,16 @@ document.addEventListener("DOMContentLoaded", function () {
         label: person.姓名,
         color: getColorByIdentity(person.身份)
       }));
+  
     const degreeMap = getNodeDegrees(edgesWithIds);
     const finalNodes = filteredNodes.map(node => ({
       ...node,
       value: degreeMap[node.id] || 0
     }));
+  
     const nodes = new vis.DataSet(finalNodes);
     const edges = new vis.DataSet(edgesWithIds);
+  
     accusationGraph.network.setData({ nodes, edges });
   }
 
