@@ -1,148 +1,172 @@
 /* 全站基本字型與佈局 */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  
-  /* 頂部分頁導航 */
-  .tab-bar {
-    display: flex;
-    background-color: #eee;
-    border-bottom: 1px solid #ccc;
-  }
-  .tab-button {
-    display: block;
-    padding: 10px 20px;
-    text-decoration: none;
-    color: #333;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-  }
-  .tab-button:hover {
-    background-color: #ddd;
-  }
-  .tab-button.active {
-    background-color: #f0f0f0;
-    border-bottom: 3px solid #0077cc;
-  }
-  
-  /* 內容區 */
-  .content {
-    padding: 20px;
-    max-width: 12000px;
-    margin: 0 auto;
-  }
-  h1 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  /* 篩選面板 */
-  .filter-panel {
-    padding: 10px;
-    margin-bottom: 20px;
-    background-color: #fafafa;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  .filter-panel > span {
-    font-weight: bold;
-    margin-right: 10px;
-  }
-  
-  /* 按鈕組容器 */
-  .button-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 8px;
-  }
-  
-  /* Timeline 按鈕分組 */
-  .timeline-group {
-    margin-bottom: 15px;
-  }
-  .timeline-group h4 {
-    margin: 0 0 5px;
-    font-size: 1.1em;
-    color: #333;
-  }
-  
-  /* 按鈕樣式 */
-  .filter-button {
-    padding: 8px 12px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #f0f0f0;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  .filter-button:hover {
-    background-color: #ddd;
-  }
-  .filter-button.active {
-    background-color: red;
-    color: white;
-  }
-  
-  /* Zoom 控制 */
-  .zoom-button {
-    background: rgba(255, 255, 255, 0.8);
-    border: none;
-    padding: 5px 8px;
-    margin: 2px;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 4px;
-  }
-  .zoom-button:hover {
-    background: rgba(240, 240, 240, 0.8);
-  }
-  .zoom-controls {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    z-index: 10;
-  }
-  
-  /* 圖表與資訊面板 */
-  .container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-top: 20px;
-  }
-  .graph {
-    flex: 1 1 600px;
-    height: 1000px;
-    border: 1px solid lightgray;
-    position: relative;
-  }
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* 頂部分頁導航 */
+.tab-bar {
+  display: flex;
+  background-color: #eee;
+  border-bottom: 1px solid #ccc;
+}
+.tab-button {
+  display: block;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+.tab-button:hover {
+  background-color: #ddd;
+}
+.tab-button.active {
+  background-color: #f0f0f0;
+  border-bottom: 3px solid #0077cc;
+}
+
+/* 內容區 */
+.content {
+  padding: 20px;
+  max-width: 12000px;
+  margin: 0 auto;
+}
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* 篩選面板 */
+.filter-panel {
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+.filter-panel > span {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+/* 按鈕組容器 */
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* Timeline 按鈕分組 */
+.timeline-group {
+  margin-bottom: 15px;
+}
+.timeline-group h4 {
+  margin: 0 0 5px;
+  font-size: 1.1em;
+  color: #333;
+}
+
+/* 通用篩選按鈕 */
+.filter-button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.filter-button:hover {
+  background-color: #ddd;
+}
+.filter-button.active {
+  background-color: red;
+  color: white;
+}
+
+/* 年／月 切换按钮 默认样式 */
+#btnYearly,
+#btnMonthly {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  margin-right: 8px;
+}
+#btnYearly:hover,
+#btnMonthly:hover {
+  background-color: #ddd;
+}
+
+/* 被激活时高亮为红底白字 */
+#btnYearly.active,
+#btnMonthly.active {
+  background-color: red;
+  color: white;
+}
+
+/* Zoom 控制 */
+.zoom-button {
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  padding: 5px 8px;
+  margin: 2px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 4px;
+}
+.zoom-button:hover {
+  background: rgba(240, 240, 240, 0.8);
+}
+.zoom-controls {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 10;
+}
+
+/* 圖表與資訊面板 */
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+.graph {
+  flex: 1 1 600px;
+  height: 1000px;
+  border: 1px solid lightgray;
+  position: relative;
+}
+.info-panel {
+  flex: 0 0 300px;
+  height: 1000px;
+  padding: 10px;
+  border: 1px solid lightgray;
+  background-color: #f9f9f9;
+  overflow-y: auto;
+}
+
+/* Media Queries */
+@media (max-width: 1180px) {
+  .graph { height: 680px; }
+  .info-panel { height: 680px; }
+}
+@media (orientation: landscape) and (max-width: 1024px) {
+  .graph { height: 900px; }
+  .info-panel { height: 900px; }
+}
+@media (orientation: portrait) {
+  .graph { height: 900px; }
   .info-panel {
-    flex: 0 0 300px;
-    height: 1000px;
-    padding: 10px;
-    border: 1px solid lightgray;
-    background-color: #f9f9f9;
-    overflow-y: auto;
+    height: 500px;
+    flex: 1 1 600px;
   }
-  
-  /* Media Queries */
-  @media (max-width: 1180px) {
-    .graph {
-      height: 680px;
-    }
-    .info-panel {
-      height: 680px;
-    }
-  }
-  @media (orientation: landscape) and (max-width: 1024px) {
-    .graph {
-      height: 900px;
-    }
-    .info-panel {
-      height: 900px;
-    }
-  }
+}
