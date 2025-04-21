@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const monthlyFilterTimes = [
     "失記日期","洪武八年","洪武十一年","洪武十二年","洪武十三年","洪武二十一年","洪武二十三年",
     "洪武二十四年失記的日","洪武二十四年二月","洪武二十四年三月","洪武二十四年四月","洪武二十四年九月",
-    "洪武二十五年正月","洪武二十五年二月","洪武二十五年五月","洪武二十五年七月","洪武二十五年八月",
+    "洪武二十五年正月","洪武二十五年二月","洪武二十五年五月","洪武二十五年八月",
     "洪武二十五年九月","洪武二十五年十月","洪武二十五年十一月","洪武二十五年十二月",
     "洪武二十五年閏十二月",
     "洪武二十六年失記的日","洪武二十六年正月",
@@ -51,6 +51,14 @@ document.addEventListener("DOMContentLoaded", function () {
   ];
   // 先定義空陣列，稍後向後端取得
   const dailyFilterTimes = [
+    "失記日期","洪武八年","洪武十一年","洪武十二年","洪武十三年",
+    "洪武二十一年","洪武二十三年",
+
+    "洪武二十四年失記的日","洪武二十四年二月","洪武二十四年三月","洪武二十四年四月","洪武二十四年九月",
+    "洪武二十五年正月","洪武二十五年二月","洪武二十五年五月","洪武二十五年八月",
+    "洪武二十五年九月","洪武二十五年十月","洪武二十五年十一月","洪武二十五年十二月",
+    "洪武二十五年閏十二月",
+
     "洪武二十六年失記的日",
     "洪武二十六年正月失記的日",
     "洪武二十六年正月初三日",
@@ -110,9 +118,13 @@ document.addEventListener("DOMContentLoaded", function () {
   // 固定標記的事件線及其標籤
   // --------------------------------------------
   const FIXED_LINES = [
-    { value: "洪武十三年",      label: "胡惟庸案"    },
-    { value: "洪武二十三年",    label: "李善長案"    },
+    { value: "洪武十三年",   label: "胡惟庸案"    },
+    { value: "洪武二十三年", label: "李善長案"    },
+    { value: "洪武二十五年", label: "葉昇被誅"    },
+    { value: "洪武二十六年", label: "藍玉案"      },
+
     { value: "洪武二十五年八月", label: "葉昇被誅"    },
+    { value: "洪武二十五年十二月", label: "藍玉獲封太子太傅"},
     { value: "洪武二十六年二月", label: "藍玉案"      }
   ];
 
@@ -130,13 +142,18 @@ document.addEventListener("DOMContentLoaded", function () {
     return `rgb(${r},${g},${b})`;
   }
   function getColorByIdentity(identity) {
+    // 如果給的是陣列，就取第 0 項
+    const key = Array.isArray(identity) ? identity[0] : identity;
     const mapping = {
-      "功臣": "#73a0fa","藍玉": "#73d8fa","僕役": "#cfcfcf","親屬": "#cfcfcf",
-      "文官": "#cfcfcf","武官": "#fa73c4","皇帝": "#faf573","胡惟庸功臣": "#73fa9e",
+      "功臣": "#73a0fa", "藍玉": "#73d8fa",
+      "僕役": "#cfcfcf", "親屬": "#cfcfcf",
+      "文官": "#cfcfcf", "武官": "#fa73c4",
+      "皇帝": "#faf573","胡惟庸功臣": "#73fa9e",
       "都督": "#8e73fa"
     };
-    return mapping[identity] || "#999999";
+    return mapping[key] || "#999999";
   }
+
   function addZoomControls(network, container) {
     const zoomContainer = document.createElement("div");
     zoomContainer.className = "zoom-controls";
@@ -209,6 +226,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return dm;
   }
 
+  
   // --------------------------------------------
   // Chart.js 插件：動態紅線 + 固定灰色虛線與標籤 + 灰色區域與區域文字標記
   // --------------------------------------------
@@ -243,7 +261,7 @@ document.addEventListener("DOMContentLoaded", function () {
       ctx.fillStyle = opts.color || "gray";
       ctx.textAlign = "center";
       ctx.textBaseline = "bottom";
-      ctx.font = "12px sans-serif";
+      ctx.font = "15px sans-serif";
       lines.forEach(item => {
         const idx = data.labels.indexOf(item.value);
         if (idx < 0) return;
@@ -252,7 +270,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.moveTo(xPos, top);
         ctx.lineTo(xPos, bottom);
         ctx.stroke();
-        ctx.fillText(item.label, xPos, top - 6);
+        ctx.fillText(item.label, xPos, top - -20);
       });
       ctx.restore();
     }
@@ -276,9 +294,9 @@ document.addEventListener("DOMContentLoaded", function () {
       ctx.fillStyle = labelColor || "#555";
       ctx.textAlign = "center";
       ctx.textBaseline = "bottom";
-      ctx.font = "12px sans-serif";
+      ctx.font = "15px sans-serif";
       const xMid = (xStart + xEnd) / 2;
-      ctx.fillText(label || "", xMid, top - 6);
+      ctx.fillText(label || "", xMid, top - -20);
       ctx.restore();
     }
   };
@@ -662,6 +680,16 @@ document.addEventListener("DOMContentLoaded", function () {
     peopleData = await fetchPeopleData();
     const nameToId = {};
     Object.values(peopleData).forEach(p => nameToId[p.姓名] = p.id);
+
+      // --------- 多重身份拆陣列 -----------
+  Object.values(peopleData).forEach(p => {
+    if (typeof p.身份 === "string") {
+      p.身份 = p.身份
+        .split(/[、,]/)
+        .map(s => s.trim())
+        .filter(s => s);
+    }
+  });
 
     if(document.getElementById("timelineGraph")){
       fetch(`${API_BASE_URL}/api/testimony-relationships`)
