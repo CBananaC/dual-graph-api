@@ -67,7 +67,6 @@
           <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年正月">正月</button>
           <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年二月">二月</button>
           <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年五月">五月</button>
-          <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年七月">七月</button>
           <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年九月">九月</button>
           <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年十月">十月</button>
           <button class="filter-button timeline-filter-button" data-engdate="洪武二十五年十一月">十一月</button>
@@ -143,18 +142,26 @@
       <div id="infoPanelTimeline" class="info-panel">請點擊人物或關係查看詳細資訊</div>
     </div>
 
-    <!-- 趨勢圖區塊：在標題旁新增切換按鈕 -->
-    <div class="trend-chart-section">
-      <div class="trend-chart-header">
-        <h2>罪名趨勢圖</h2>
+    <h1>罪名趨勢圖</h1>
+    <div id="timelineFilter" class="filter-panel">
+      <div class="button-group">
         <button id="btnYearly">按年份</button>
         <button id="btnMonthly">按月份</button>
-        <!-- 原本的按年／按月按鈕旁，新增： -->
-<button id="btnDaily" class="filter-button">按日計</button>
+        <button id="btnDaily" class="filter-button">按日計</button>
       </div>
-      <canvas id="trendChart" width="800" height="400"></canvas>
     </div>
 
+    <!-- 趨勢圖區塊：在標題旁新增切換按鈕 -->
+    <div class="trend-chart-section">
+      <canvas id="trendChart" width="800" height="500"></canvas>
+    </div>
+
+    <div class="trend-chart-section">
+      <canvas id="detailChart"></canvas>
+      <!-- 這裡加一行： -->
+      <canvas id="fromToChart"></canvas>
+    </div>
+    
   </div>
   
   <!-- 載入外部 JavaScript 檔案 -->
