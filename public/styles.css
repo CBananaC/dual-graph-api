@@ -89,7 +89,8 @@ h1 {
 
 /* 年／月 切换按钮 默认样式 */
 #btnYearly,
-#btnMonthly {
+#btnMonthly,
+#btnDaily {
   padding: 8px 12px;
   font-size: 14px;
   border: 1px solid #ccc;
@@ -101,13 +102,15 @@ h1 {
   margin-right: 8px;
 }
 #btnYearly:hover,
-#btnMonthly:hover {
+#btnMonthly:hover,
+#btnDaily:hover {
   background-color: #ddd;
 }
 
 /* 被激活时高亮为红底白字 */
 #btnYearly.active,
-#btnMonthly.active {
+#btnMonthly.active,
+#btnDaily.active {
   background-color: red;
   color: white;
 }
@@ -159,10 +162,16 @@ h1 {
   .graph { height: 680px; }
   .info-panel { height: 680px; }
 }
-@media (orientation: landscape) and (max-width: 1024px) {
+@media (orientation: landscape) and (max-width: 983px) {
   .graph { height: 900px; }
   .info-panel { height: 900px; }
+  .info-panel {flex:1 1 600px;}
 }
+
+@media (orientation: landscape) and (max-width: 983px) {
+  .info-panel { height: 400px; }
+}
+
 @media (orientation: portrait) {
   .graph { height: 900px; }
   .info-panel {
