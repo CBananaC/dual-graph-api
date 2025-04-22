@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // --------------------------------------------
   // 全域變數與 API 設定
   // --------------------------------------------
-  const API_BASE_URL = "http://localhost:3000"; // 上線前請調整
+  const API_BASE_URL = "https://dual-graph-api.onrender.com"; // 上線前請調整
   let peopleData = {};
   let fullTestimonyData = {};
   let timelineGraph;
