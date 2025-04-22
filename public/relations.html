@@ -38,7 +38,7 @@
   </header>
 
   <main class="content">
-    <h1>指證關係圖</h1>
+    <h1>關係圖</h1>
 
     <!-- 指控關係圖 身份篩選 -->
     <div class="filter-panel">
@@ -54,6 +54,10 @@
       </div>
     </div>
 
+    <div class="filter-panel">
+      <span>2. 點選人物圖標：</span>
+    </div>
+
     <!-- 指控關係圖 與 資訊面板 -->
     <section class="container">
       <div id="accusationGraph" class="graph"></div>
@@ -64,7 +68,7 @@
 
     <!-- 指控者/被指控者 切換 -->
     <div class="filter-panel">
-      <span>2. 該人物作為：</span>
+      <span>3. 該人物作為：</span>
       <div class="button-group">
         <button id="accuserButton" class="filter-button">
           <i class="fas fa-user-tie"></i> 指控者
@@ -75,10 +79,9 @@
       </div>
     </div>
 
-    <h1>證供關係圖</h1>
     <!-- 證供關係圖 篩選 & 重置 -->
     <div class="filter-panel">
-      <span>3. 篩選罪名：</span>
+      <span>4. 篩選罪名：</span>
       <div class="button-group">
         <button id="showAllButton" class="filter-button">
           <i class="fas fa-eye"></i> 重置關係圖
@@ -108,6 +111,11 @@
 
     <!-- 新增長條圖 + 氣泡圖容器 -->
     <div class="chart-container" style="width:100%;margin-top:20px;">
+      
+      <div class="filter-panel">
+        <span>5. 統計：</span>
+      </div>
+
       <!-- 長條圖 -->
       <canvas id="testimonyBarChart"></canvas>
       <!-- D3 Pack Layout 氣泡圖 -->
