@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  const API_BASE_URL = "https://dual-graph-api.onrender.com";
+  const API_BASE_URL = "http://localhost:3000";
   let peopleData = {};
   let fullAccusationData = {};
   let fullTestimonyData  = {};
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
       "功臣": "#73a0fa",
       "藍玉": "#73d8fa",
       "僕役": "#cfcfcf",
-      "親屬": "#cfcfcf",
+      "親屬": "#faa073",
       "文官": "#cfcfcf",
       "武官": "#fa73c4",
       "皇帝": "#faf573",
@@ -340,6 +340,7 @@ document.addEventListener("DOMContentLoaded", function () {
       { key: '種族',     label: '種族' },
       { key: '籍貫',     label: '籍貫' },
       { key: '親屬關係', label: '親屬關係' },
+      { key: '身份', label: '身份' },
       { key: '職位',     label: '職位' },
       { key: '下場',     label: '下場' },
       { key: '原文',     label: '原文' },
@@ -498,8 +499,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const TT_FONT_SIZE    = 18;          // ★Bubble Tooltip 字級(px)
   const TT_BG_COLOR     = "rgba(255,255,255,0.9)"; // 
-  // ★Tooltip 底色
-  const TEXT_LINE_GAP   = 12;  
+
 
   function updateTestimonyBarChart(edgesArr) {
     const sorted = testimonyCategories
@@ -582,11 +582,6 @@ window.addEventListener("resize", () => {
   }
 });
 
-  function getCurrentCrimeLabel() {
-    return currentTestimonyFilterLabel === "全部罪名"
-      ? "全部證供關係"
-      : currentTestimonyFilterLabel;
-  }
 
  function updateTestimonyBubbleChart(edgesArr) {
     /* 0. 容器、標題 */
