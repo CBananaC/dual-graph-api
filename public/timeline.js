@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // --------------------------------------------
   // 全域變數與 API 設定
   // --------------------------------------------
-  const API_BASE_URL = "https://dual-graph-api.onrender.com"; // 上線前請調整
+  const API_BASE_URL = "http://localhost:3000"; // 上線前請調整
   let peopleData = {};
   let fullTestimonyData = {};
   let timelineGraph;
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const FIXED_LINES = [
     { value: "洪武十三年",   label: "胡惟庸案"    },
     { value: "洪武二十三年", label: "李善長案"    },
-    { value: "洪武二十五年", label: "葉昇被誅"    },
+    { value: "洪武二十五年", label: "葉昇被誅、藍玉獲封太子太傅"    },
     { value: "洪武二十六年", label: "藍玉案"      },
 
     { value: "洪武二十五年八月", label: "葉昇被誅"    },
@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const key = Array.isArray(identity) ? identity[0] : identity;
     const mapping = {
       "功臣": "#73a0fa", "藍玉": "#73d8fa",
-      "僕役": "#cfcfcf", "親屬": "#cfcfcf",
+      "僕役": "#cfcfcf", "親屬": "#faa073",
       "文官": "#cfcfcf", "武官": "#fa73c4",
       "皇帝": "#faf573","胡惟庸功臣": "#73fa9e",
       "都督": "#8e73fa"
@@ -373,22 +373,46 @@ document.addEventListener("DOMContentLoaded", function () {
     const edgesWithIds = processed.map((e,i) => ({
       ...e, id: e.edgeId || `edge-${i}`, originalData: e
     }));
-    const allowed = new Set();
+    const fromToSet = new Set();
     edgesWithIds.forEach(e => {
-      allowed.add(e.from);
-      allowed.add(e.to);
-      if(Array.isArray(e.accused)) e.accused.forEach(id => allowed.add(id));
+      fromToSet.add(e.from);
+      fromToSet.add(e.to);
     });
-    const filteredNodes = Object.values(peopleData)
-      .filter(p => allowed.has(p.id))
-      .map(p => ({ ...p, label: p.姓名, color: getColorByIdentity(p.身份) }));
-    const degreeMap = getNodeDegrees(edgesWithIds);
-    const finalNodes = filteredNodes.map(n => ({ ...n, value: degreeMap[n.id] || 0 }));
+  
+    // 2. allowed 一開始就是這些 from/to
+    const allowed = new Set(fromToSet);
+  
+    // 3. 只有當 accused 也在 from/to 裡才加入
+    edgesWithIds.forEach(e => {
+      if (Array.isArray(e.accused)) {
+        e.accused.forEach(id => {
+          if (fromToSet.has(id)) {
+            allowed.add(id);
+          }
+        });
+      }
+    });
 
-    const nodes = new vis.DataSet(finalNodes);
-    const edges = new vis.DataSet(edgesWithIds);
-    timelineGraph.network.setData({ nodes, edges });
-  }
+ const filteredNodes = Object.values(peopleData)
+    .filter(p => allowed.has(p.id))
+    .map(p => ({
+      ...p,
+      label: p.姓名,
+      color: getColorByIdentity(p.身份)
+    }));
+
+  // 根據 degree 設定 value
+  const degreeMap = getNodeDegrees(edgesWithIds);
+  const finalNodes = filteredNodes.map(n => ({
+    ...n,
+    value: degreeMap[n.id] || 0
+  }));
+
+  // 更新 vis.js  data
+  const nodesDs = new vis.DataSet(finalNodes);
+  const edgesDs = new vis.DataSet(edgesWithIds);
+  timelineGraph.network.setData({ nodes: nodesDs, edges: edgesDs });
+}
 
   // --------------------------------------------
   // 趨勢圖與互動（包含 daily 支援）
@@ -480,41 +504,118 @@ document.addEventListener("DOMContentLoaded", function () {
     updateDetailChart();
   }
 
+  const detailContainer = document.getElementById("detailContainer");
+
+// 隱藏／摧毀 detailChart 的函式
+function hideDetailChart() {
+  if (detailChartInstance) {
+    detailChartInstance.destroy();
+    detailChartInstance = null;
+  }
+  detailContainer.style.display = "none";
+}
+
   // --------------------------------------------
   // Bar / Line 詳細圖 & 互動
   // --------------------------------------------
   function showBarChart(itemLabels, itemValues, title, colors) {
-    const arr = itemLabels.map((l,i) => ({ label:l, value:itemValues[i], color:colors[i] }));
-    arr.sort((a,b) => b.value - a.value);
-    const labs = arr.map(z=>z.label), vals = arr.map(z=>z.value), clrs = arr.map(z=>z.color);
-
+    // 先显示 detailContainer
+    document.getElementById("detailContainer").style.display = "block";
+  
+    // 1. 合并数据并按 value 降序排序
+    const arr = itemLabels.map((lbl, i) => ({
+      label: lbl,
+      value: itemValues[i],
+      color: colors[i]
+    }));
+    arr.sort((a, b) => b.value - a.value);
+  
+    // 2. 拆回排序后的三个数组
+    const sortedLabels = arr.map(d => d.label);
+    const sortedValues = arr.map(d => d.value);
+    const sortedColors = arr.map(d => d.color);
+  
+    // 3. 销毁旧实例
     const ctx = document.getElementById("detailChart").getContext("2d");
-    if(detailChartInstance) detailChartInstance.destroy();
+    if (detailChartInstance) {
+      detailChartInstance.destroy();
+      detailChartInstance = null;
+    }
+  
+    // 4. 重新建一个 bar chart
     detailChartInstance = new Chart(ctx, {
       type: "bar",
-      data: { labels: labs, datasets: [{ label: title, data: vals, backgroundColor: clrs }] },
+      data: {
+        labels: sortedLabels,
+        datasets: [{
+          label: title,
+          data: sortedValues,
+          backgroundColor: sortedColors
+        }]
+      },
       options: {
-        layout: { padding: { top:30, bottom:30 } },
         responsive: true,
+        maintainAspectRatio: false,
+        layout: { padding: { top: 30, bottom: 30 } },
+        scales: {
+          y: { beginAtZero: true }
+        },
         plugins: {
           title: { display: true, text: title },
-          fixedLinesPlugin: { lines: FIXED_LINES, color: "gray", dash:[5,5], lineWidth:1 },
-          regionPlugin:{ 
-            start: "洪武二十六年二月失記的日", 
-            end:   "洪武二十六年二月十八日", 
+          legend: {
+            display: true,
+            position: "top",
+            labels: {
+              generateLabels: chart => {
+                const ds = chart.data.datasets[0];
+                return chart.data.labels
+                  .map((lbl, i) => {
+                    const v = ds.data[i];
+                    if (v <= 0) return null;
+                    const bg = Array.isArray(ds.backgroundColor)
+                      ? ds.backgroundColor[i]
+                      : ds.backgroundColor;
+                    return {
+                      text: lbl,
+                      fillStyle: bg,
+                      strokeStyle: bg,
+                      hidden: !chart.getDataVisibility(i),
+                      index: i,
+                      datasetIndex: 0
+                    };
+                  })
+                  .filter(x => x);
+              }
+            },
+            onClick: (e, legendItem, legend) => {
+              const chart = legend.chart;
+              chart.toggleDataVisibility(legendItem.index);
+              chart.update();
+            }
+          },
+          fixedLinesPlugin: {
+            lines: FIXED_LINES,
+            color: "gray",
+            dash: [5, 5],
+            lineWidth: 1
+          },
+          regionPlugin: {
+            start: "洪武二十六年二月失記的日",
+            end:   "洪武二十六年二月十八日",
             color: "rgba(128,128,128,0.2)",
             label: "「藍玉謀反」",
             labelColor: "#555"
           },
           datalabels: { anchor: "end", align: "top", formatter: v => v }
-        },
-        scales: { y: { beginAtZero: true } }
+        }
       }
     });
+  
     lastDetail = { mode: "bar" };
   }
 
   function showLineChart(xLabels, yValues, seriesLabel, color) {
+    detailContainer.style.display = "block";
     const ctx = document.getElementById("detailChart").getContext("2d");
     if(detailChartInstance) detailChartInstance.destroy();
     detailChartInstance = new Chart(ctx, {
@@ -551,6 +652,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     lastDetail = { mode: "line", crimeLabel: seriesLabel };
   }
+  hideDetailChart();
 
   function updateDetailChart() {
     if(!lastDetail) return;
@@ -603,6 +705,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function highlightTimeOnChart(engdate) {
     if(!trendChartInstance) return;
+      // 需要跳過紅線的按鈕清單
+  const noRedDates = [
+    "洪武二十四年",
+    "洪武二十五年",
+    "洪武二十六年",
+    "洪武二十六年失記的日",
+    "洪武二十六年正月",
+    "洪武二十六年二月",
+    "洪武二十六年三月",
+    "洪武二十六年四月"
+  ];
+
+  // 如果是在日計模式，且按到上述日期，就不畫紅線
+  if (currentTrendTimeGroup === "daily" && noRedDates.includes(engdate)) {
+    trendChartInstance.options.plugins.verticalLinePlugin.value = null;
+    trendChartInstance.update();
+    return;
+  }
     const labels = trendChartInstance.data.labels;
     const match = labels.find(l=>engdate.includes(l)||l.includes(engdate)) || null;
     selectedFilterTime = match;
@@ -619,37 +739,37 @@ document.addEventListener("DOMContentLoaded", function () {
   function showPersonInfo(nodeId, infoPanelId) {
     const infoPanel = document.getElementById(infoPanelId);
     const person = peopleData[nodeId];
-    if(person) {
-      infoPanel.innerHTML = `
-        <h3>人物資訊</h3>
-        <p><strong>名字：</strong>${person.姓名||""}</p>
-        <p><strong>年齡：</strong>${person.年齡||"-"}</p>
-        <p><strong>種族：</strong>${person.種族||"-"}</p>
-        <p><strong>籍貫：</strong>${person.籍貫||"-"}</p>
-        <p><strong>親屬關係：</strong>${person.親屬關係||"-"}</p>
-        <p><strong>身份：</strong>${person.身份||"-"}</p>
-        <p><strong>職位：</strong>${person.職位||"-"}</p>
-        <p><strong>下場：</strong>${person.下場||"-"}</p>
-        <p><strong>原文：</strong>${person.原文||"-"}</p>
-        <p><strong>資料來源：</strong>${person.資料來源||"-"}</p>
-      `;
-    } else {
+    if (!person) {
       infoPanel.innerHTML = "<p>❌ 無法找到該人物的詳細資料。</p>";
+      return;
     }
+  
+    // 定義要顯示的欄位與對應的標籤
+    const fields = [
+      { key: "姓名",     label: "名字" },
+      { key: "年齡",     label: "年齡" },
+      { key: "種族",     label: "種族" },
+      { key: "籍貫",     label: "籍貫" },
+      { key: "親屬關係", label: "親屬關係" },
+      { key: "身份",     label: "身份" },
+      { key: "職位",     label: "職位" },
+      { key: "下場",     label: "下場" },
+      { key: "原文",     label: "原文" },
+      { key: "資料來源", label: "資料來源" }
+    ];
+  
+    // 動態組 HTML，只對有值的欄位建立 <p>
+    let html = `<h3>人物資訊</h3>`;
+    fields.forEach(f => {
+      const val = person[f.key];
+      if (val != null && val !== "") {
+        html += `<p><strong>${f.label}：</strong>${val}</p>`;
+      }
+    });
+  
+    infoPanel.innerHTML = html;
   }
-
-  function showAccusationEdgeInfo(edgeId, edgesData, infoPanelId) {
-    const edge = edgesData.find(e => e.id === edgeId);
-    const infoPanel = document.getElementById(infoPanelId);
-    if(edge) {
-      infoPanel.innerHTML = `
-        <h3>指控關係資訊</h3>
-        <p><strong>關係類型：</strong>${edge.label||"-"}</p>
-      `;
-    } else {
-      infoPanel.innerHTML = "<p>❌ 無法找到該指控關係的詳細資訊。</p>";
-    }
-  }
+  
 
   function showTestimonyEdgeInfo(edgeId, edgesData, infoPanelId) {
     const clicked = edgesData.find(e => e.id.toString() === edgeId.toString());
@@ -762,25 +882,49 @@ document.addEventListener("DOMContentLoaded", function () {
     if (timeStr === "全部") {
       updateTimelineGraph(fullTestimonyData.edges);
       // 全部罪行總計
+
+      const seriesAll = trendChartConfig.filterLabels.map(l => applyMapping(l, trendChartConfig.labelMapping));
+      const countsAll = {};
+      seriesAll.forEach(s => countsAll[s] = 0);
+      fullTestimonyData.edges.forEach(e => {
+        trendChartConfig.filterLabels.forEach(raw => {
+          if (e.label?.includes(raw)) {
+            countsAll[ applyMapping(raw, trendChartConfig.labelMapping) ]++;
+          }
+        });
+      });
+  
+      const labelsAll = seriesAll;
+      const valuesAll = labelsAll.map(s => countsAll[s]);
+      const colorsAll = seriesAll.map(_ => getRandomColor());
+  
+      // 顯示 bar chart
+      showBarChart(labelsAll, valuesAll, "全部罪名統計", colorsAll);
+  
+    } else {
+      // 篩出該時間的 edges
+      const filtered = fullTestimonyData.edges.filter(e => e.Date && e.Date.includes(timeStr));
+      updateTimelineGraph(filtered);
+      highlightTimeOnChart(timeStr);
+  
+      // 統計該時間的罪名
       const series = trendChartConfig.filterLabels.map(l => applyMapping(l, trendChartConfig.labelMapping));
       const counts = {};
       series.forEach(s => counts[s] = 0);
-      fullTestimonyData.edges.forEach(e => {
+      filtered.forEach(e => {
         trendChartConfig.filterLabels.forEach(raw => {
           if (e.label?.includes(raw)) {
             counts[ applyMapping(raw, trendChartConfig.labelMapping) ]++;
           }
         });
       });
+  
       const labels = series;
-      const values = series.map(s => counts[s]);
+      const values = labels.map(s => counts[s]);
       const colors = series.map(_ => getRandomColor());
-      showBarChart(labels, values, "全部罪行統計", colors);
-    } else {
-      const filtered = fullTestimonyData.edges.filter(e => e.Date && e.Date.includes(timeStr));
-      updateTimelineGraph(filtered);
-      highlightTimeOnChart(timeStr);
+  
+      // 顯示 bar chart（並自動展開 detailContainer）
+      showBarChart(labels, values, `${timeStr} 罪名統計`, colors);
     }
   }
-
 });
