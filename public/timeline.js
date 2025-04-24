@@ -145,11 +145,15 @@ document.addEventListener("DOMContentLoaded", function () {
     // 如果給的是陣列，就取第 0 項
     const key = Array.isArray(identity) ? identity[0] : identity;
     const mapping = {
-      "功臣": "#73a0fa", "藍玉": "#73d8fa",
-      "僕役": "#cfcfcf", "親屬": "#faa073",
-      "文官": "#cfcfcf", "武官": "#fa73c4",
-      "皇帝": "#faf573","胡惟庸功臣": "#73fa9e",
-      "都督": "#8e73fa"
+      "牽涉藍玉案的功臣": "#73a0fa",
+      "藍玉": "#73d8fa",
+      "僕役": "#cfcfcf",
+      "親屬": "#faa073",
+      "文官": "#cfcfcf",
+      "武官": "#fa73c4",
+      "皇帝": "#faf573",
+      "牽涉胡惟庸案的功臣": "#73fa9e",
+      "都督": "#8e73fa",
     };
     return mapping[key] || "#999999";
   }
