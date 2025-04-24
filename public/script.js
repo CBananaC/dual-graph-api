@@ -51,14 +51,14 @@ document.addEventListener("DOMContentLoaded", function () {
   function getColorByIdentity(identity) {
     const key = Array.isArray(identity) ? identity[0] : identity;
     const mapping = {
-      "功臣": "#73a0fa",
+      "牽涉藍玉案的功臣": "#73a0fa",
       "藍玉": "#73d8fa",
       "僕役": "#cfcfcf",
       "親屬": "#faa073",
       "文官": "#cfcfcf",
       "武官": "#fa73c4",
       "皇帝": "#faf573",
-      "胡惟庸功臣": "#73fa9e",
+      "牽涉胡惟庸案的功臣": "#73fa9e",
       "都督": "#8e73fa",
     };
     return mapping[key] || "#999999";
@@ -314,7 +314,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const edgeId = params.edges[0];
       panel.innerHTML = renderAccusationInfo(edgeId);
     } else {
-      panel.textContent = "請雙擊人物或關係查看詳細資訊";
+      panel.textContent = "請點擊人物或關係查看詳細資訊";
     }
   }
 
@@ -502,19 +502,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   function updateTestimonyBarChart(edgesArr) {
-    const sorted = testimonyCategories
-      .map(c => ({
-        key:     c.key,
-        display: c.display,
-        count: edgesArr.filter(
-          e => e.label && e.label.toLowerCase().includes(c.key.toLowerCase())
-        ).length
-      }))
-      .sort((a, b) => b.count - a.count);
+    const filterLabel = currentTestimonyFilterLabel === "全部罪名"
+      ? ""
+      : currentTestimonyFilterLabel;
+    let labels, data;
   
-    const labels = sorted.map(item => item.display);
-    const data   = sorted.map(item => item.count);
+    if (!filterLabel) {
+      // 「全部」模式：只计等于各分类 key 的边
+      labels = testimonyCategories.map(c => c.display);
+      data   = testimonyCategories.map(c =>
+        edgesArr.filter(e => e.label === c.key).length
+      );
+    } else {
+      // 包含模式：统计所有包含 filterLabel 的完整标签，并分组计数
+      const mapCount = {};
+      const keyLower = filterLabel.toLowerCase();
+      edgesArr.forEach(e => {
+        if (e.label && e.label.toLowerCase().includes(keyLower)) {
+          mapCount[e.label] = (mapCount[e.label] || 0) + 1;
+        }
+      });
+      // 原始不排序
+      labels = Object.keys(mapCount);
+      data   = labels.map(l => mapCount[l]);
+    }
   
+    // === 这里开始：按照 data 大小排序 labels & data ===
+    const pairs = labels.map((label, i) => ({ label, value: data[i] }));
+    pairs.sort((a, b) => b.value - a.value);
+    labels = pairs.map(p => p.label);
+    data   = pairs.map(p => p.value);
+    // =====================================================
     const bgColors = labels.map(() => randomColor());
     const hoverBg  = bgColors.map(c => darkenColor(c, 0.2));
   
@@ -543,7 +561,8 @@ document.addEventListener("DOMContentLoaded", function () {
           data,
           backgroundColor: bgColors,
           hoverBackgroundColor: hoverBg,
-          barPercentage: labels.length === 1 ? 0.3 : 0.5
+          barPercentage:     labels.length === 1 ? 0.2 : 0.5,
+          categoryPercentage: labels.length === 1 ? 0.4 : 0.8
         }] },
         options: {
           plugins: {
