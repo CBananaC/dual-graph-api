@@ -3,22 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>結論 - 我的論文</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>引言 - 我的論文</title>
+  <link rel="stylesheet" href="text.css">
+  <style>
+    body {
+      background: url('images/background.png') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+    }
+        /* 在 body 正下方插一层全屏遮罩 */
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;                       /* top:0;right:0;bottom:0;left:0 */
+  background: rgba(255, 254, 254, 0.615); /* 黑色 40% 不透明 */
+  z-index: 0;
+}
+  </style>
 </head>
 <body>
   <!-- 頂部分頁導航欄 -->
-  <div class="tab-bar">
+  <div class="tab-bar"> 
+    <a href="cover.html" class="tab-button">封面</a>
     <a href="introduction.html" class="tab-button">引言</a>
     <a href="relations.html" class="tab-button">關係圖</a>
     <a href="timeline.html" class="tab-button">時間線</a>
-    <a href="text.html" class="tab-button">現文</a>
-    <a href="conclusion.html" class="tab-button active">結論</a>
+    <a href="text.html" class="tab-button">正文</a>
+    <a href="conclusion.html" class="tab-button active">附錄</a>
   </div>
 
-  <div class="content">
-    <h1>結論</h1>
-    <p>這裡是論文結論部分的內容，總結本研究的成果與啟示……</p>
-  </div>
+  <div class="content text-page">
+
+    <!-- 1. 章節導覽列 -->
+    <nav class="chapter-nav">
+      <a href="#參考資料">參考資料</a>
+      <a href="#附錄">附錄</a>
+    </nav>
+
+    <div class="chapters">
+      
+      <section id="參考資料">
+
+        <h2>參考資料</h2>
+      
+        <!-- 1. 明初四大案 -->
+        <div class="subsection" id="intro-1">
+          <h3>1. 明初四大案</h3>
+          <p>
+            明太祖洪武年間（1368-1398）發生了四件大案：洪武九年（1376）或十五年（1382）的空印案、十三年（1380）的胡惟庸案、十八年（1385）的郭桓案和二十六年（1393）的藍玉案。空印案和郭桓案指控官員貪腐，胡惟庸案和藍玉案則以「謀反」罪名誅殺功臣（周中梁，2019）。
+          </p>
+        </div>
+
+      </section>
+
+      <section id="附錄">
+
+        <h2>附錄</h2>
+      
+        <!-- 1. 明初四大案 -->
+        <div class="subsection" id="intro-1">
+          <h3>1. 明初四大案</h3>
+          <p>
+            明太祖洪武年間（1368-1398）發生了四件大案：洪武九年（1376）或十五年（1382）的空印案、十三年（1380）的胡惟庸案、十八年（1385）的郭桓案和二十六年（1393）的藍玉案。空印案和郭桓案指控官員貪腐，胡惟庸案和藍玉案則以「謀反」罪名誅殺功臣（周中梁，2019）。
+          </p>
+        </div>
+
+      </section>
+
+
+    
+  <script src="text.js"></script>
+
 </body>
 </html>
