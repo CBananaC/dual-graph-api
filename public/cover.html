@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>封面 - 《逆臣錄．卷一》資料庫研究</title>
+  <link rel="stylesheet" href="text.css">
+  <style>
+    body {
+      background: url('images/background.png') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+    }
+    .tab-bar {
+        flex: 0 0 auto;
+      }
+    /* cover-content 撑满剩余空间并作 Flex 容器 */
+    .cover-content {
+        flex: 1 1 auto;
+        display: flex;
+        justify-content: center;  /* 水平居中 */
+        align-items: center;      /* 垂直居中 */
+      }
+  
+      /* 真正的文字区块，用 inner 包一层 */
+      .cover-content .inner {
+        text-align: center;
+        color: black; 
+        font-family: "Noto Serif TC", serif;
+        max-width: 80%;
+        font-size: 1em;
+      }
+      .cover-content .inner h1 {
+        font-size: 3em;
+        margin: 0.2em 0;
+      }
+      .cover-content .inner h2 {
+        font-size: 1.5em;
+        margin: 0.5em 0;
+      }
+      .cover-content .inner ul {
+        list-style: none;
+        padding: 0;
+        margin: 0.5em 0;
+        font-size: 1.2em;
+        line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+    <div class="tab-bar"> 
+        <a href="cover.html" class="tab-button active">封面</a>
+        <a href="introduction.html" class="tab-button">引言</a>
+        <a href="relations.html" class="tab-button">關係圖</a>
+        <a href="timeline.html" class="tab-button">時間線</a>
+        <a href="text.html" class="tab-button">正文</a>
+        <a href="conclusion.html" class="tab-button">附錄</a>
+      </div>
+
+  <div class="cover-content">
+    <div class="inner">
+    <h1>藍玉案《逆臣錄．卷一》資料庫</h1>
+    <h2>研究團隊</h2>
+    <ul>
+        <li>廖啟宏 Liu Kai Wang</li>
+        <li>朱慧婷 Chu Wai Ting</li>
+        <li>黃雪梅 Huang Xue Mei</li>
+        <li>林子浩 Lam Tsz Ho</li>
+        <li>張昭華 Chong Chiu Wa</li>
+
+    </ul>
+  </div>
+</div>
+     <script src="text.js"></script>
+</body>
+</html>

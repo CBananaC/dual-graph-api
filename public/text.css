@@ -1,0 +1,185 @@
+:root {
+    --tab-height: 50px;       /* 根据你量测的 .tab-bar 实际高度调整 */
+    --nav-height: 50px;       /* 根据你量测的 .chapter-nav 实际高度调整 */
+    --total-offset: calc(var(--tab-height) + var(--nav-height));
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+/* 整頁 StoryMap 容器 */
+.content.text-page {
+    height: calc(100vh - var(--total-offset));
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    position: relative;
+  }
+  
+  /* ===================== 主選單 (Tab Bar) ===================== */
+.tab-bar {
+    display: flex;
+    top: 0; left: 0; right: 0;
+    height: var(--tab-height);
+    z-index: 1000;
+    background-color: #eee;
+    border-bottom: 1px solid #ccc;
+  }
+  .tab-button {
+    display: block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+  .tab-button:hover {
+    background-color: #ddd;
+  }
+  .tab-button.active {
+    background-color: #f0f0f0;
+    border-bottom: 3px solid #0077cc;
+  }
+  
+  /* 章節導覽列 */
+  .chapter-nav {
+    position: fixed;
+    display: flex;
+    top: var(--tab-height);
+    left: 0; right: 0;
+
+    z-index: 999;
+    background-color: #eee;
+  }
+  .chapter-nav a {
+    display: block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+
+  .chapter-nav a:hover {
+    background-color: #ddd;
+  }
+  .chapter-nav a.active {
+    background-color: #f0f0f0;
+    border-bottom: 3px solid #0077cc;
+  }
+  
+  /* 章節正文主樣式 */
+  .chapters {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+    font-family: "Noto Serif TC", serif;
+    font-size: 20px;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+    color: #333;
+    scroll-padding-top: 120px;
+  }
+  .chapters h2 {
+    font-size: 2em;
+    margin: 1.5em 0 0.5em;
+    padding-bottom: 0.3em;
+    border-bottom: 3px solid #0077cc;
+    color: black;
+  }
+
+  .chapters p {
+    margin: 1em 0;
+    text-indent: 2em;
+  }
+  
+  /* 圖片響應式 */
+.chart-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 1.5em 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+
+}
+  /* 小節卡片化 & 交錯排列 */
+  .chapters section {
+    scroll-snap-align: start;
+    padding: 0px 20px;
+    transition: transform 0.3s;
+    scroll-margin-top: var(--total-offset);
+  }
+  
+  .chapters .subsection {
+    width: 70%;
+    margin: 60px 0;
+    padding: 25px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    scroll-snap-align: start;
+    transition: transform 0.3s;
+  }
+
+  .chapters .imagesubsection {
+    width: 95%;
+    margin: 60px 0;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    scroll-snap-align: start;
+    transition: transform 0.3s;
+  }
+
+  .chapters .subsection:nth-of-type(odd) {
+    margin-left: 0;
+    margin-right: auto;
+  }
+  .chapters .subsection:nth-of-type(even) {
+    margin-left: auto;
+    margin-right: 0;
+  }
+  .chapters .subsection h3, 
+  .chapters .imagesubsection h3 {
+    font-size: 1.4em;
+    margin: 0 0 0.6em;
+    color: #005a99;
+    border-left: 4px solid #0077cc;
+    padding-left: 10px;
+  }
+  .chapters .imagetextsubsection p {
+    text-align: center;
+    color: grey;
+    font-style: italic;
+  }
+  
+  .chapters .subsection p {
+    margin: 1em 1em;
+    text-indent: 0em;
+  }
+  .chapters .subsection ol,
+  .chapters .subsection ul {
+    margin: 0.8em 0 1em 1.5em;
+    font-weight: bold;
+  }
+  .chapters .subsection .chart {
+    margin: 1.5em 0;
+  }
+  
+  /* 浮起效果 */
+  .content.text-page::-webkit-scrollbar {
+    width: 8px;
+  }
+  .content.text-page::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+  }
+  .chapters .subsection:target {
+    transform: translateY(-6px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
